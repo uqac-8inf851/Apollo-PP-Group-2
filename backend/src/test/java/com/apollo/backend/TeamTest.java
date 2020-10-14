@@ -37,7 +37,7 @@ public class TeamTest extends GenericTest {
 	}
 
 	@Test
-	public void saveNewTeamWithContactTest() throws Exception {
+	public void saveNewTeamTest() throws Exception {
 		Team team = new Team("name");
 
 		Team response = teamRepository.save(team);
