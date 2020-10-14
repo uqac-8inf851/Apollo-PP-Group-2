@@ -1,7 +1,7 @@
 package com.apollo.backend.controller;
 
-import com.apollo.backend.model.Client;
-import com.apollo.backend.repository.ClientRepository;
+import com.apollo.backend.model.Team;
+import com.apollo.backend.repository.TeamRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -28,28 +28,28 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RepositoryRestController
-public class ClientController extends GenericController {
+public class TeamController extends GenericController {
 
     @Autowired
-    private ClientRepository repository;
+    private TeamRepository repository;
 
-    private String baseLink = Client.class.getSimpleName().toLowerCase();
+    private String baseLink = Team.class.getSimpleName().toLowerCase();
 
-    @RequestMapping(method = RequestMethod.POST, value = "/client") 
-    public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Client> client) {
-        return processRequest(client.getContent(), HttpStatus.CREATED);
+    @RequestMapping(method = RequestMethod.POST, value = "/team") 
+    public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Team> team) {
+        return processRequest(team.getContent(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/client/{id}") 
-    public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Client> client, @PathVariable Integer id) {
-        Optional<Client> registered = repository.findById(id);
-        registered.get().setCompanyName(client.getContent().getCompanyName());
+    @RequestMapping(method = RequestMethod.PUT, value = "/team/{id}") 
+    public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Team> team, @PathVariable Integer id) {
+        Optional<Team> registered = repository.findById(id);
+        registered.get().setName(team.getContent().getName());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }
 
-    private ResponseEntity<?> processRequest(Client client, HttpStatus httpStatus) {
-        String[] messages = super.validRequest(client);
+    private ResponseEntity<?> processRequest(Team team, HttpStatus httpStatus) {
+        String[] messages = super.validRequest(team);
 
         if(messages.length > 0) {
             EntityModel<String[]> resource = new EntityModel<String[]>(messages);
@@ -57,17 +57,17 @@ public class ClientController extends GenericController {
             return new ResponseEntity<>(resource , HttpStatus.BAD_REQUEST);
         }
 
-        Client saved = repository.save(client);
+        Team saved = repository.save(team);
 
         List<Link> links = new ArrayList<Link>();
-        links.add(linkTo(Client.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
-        links.add(linkTo(Client.class).slash(baseLink).slash(saved.getId()).withSelfRel());
+        links.add(linkTo(Team.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
+        links.add(linkTo(Team.class).slash(baseLink).slash(saved.getId()).withSelfRel());
 
-        EntityModel<Client> resource = new EntityModel<>(saved);
+        EntityModel<Team> resource = new EntityModel<>(saved);
         resource.add(links);
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("location", linkTo(Client.class).slash(baseLink).slash(client.getId()).toString());
+        headers.add("location", linkTo(Team.class).slash(baseLink).slash(team.getId()).toString());
 
         return new ResponseEntity<>(resource, headers, httpStatus);
     }

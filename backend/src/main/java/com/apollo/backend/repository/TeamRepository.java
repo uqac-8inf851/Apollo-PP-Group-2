@@ -10,12 +10,12 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @CrossOrigin
-@RepositoryRestResource(collectionResourceRel = "client", path = "client")
-public interface ClientRepository extends PagingAndSortingRepository<Client, Integer> {
+@RepositoryRestResource(collectionResourceRel = "team", path = "team")
+public interface TeamRepository extends PagingAndSortingRepository<Team, Integer> {
 
-  List<Client> findById(@Param("id") String id);
+  List<Team> findById(@Param("id") String id);
 
   @Override
   @RestResource(exported = false)
-  <S extends Client> S save(S client);
+  <S extends Team> S save(S team);
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.apollo.backend.repository.ClientRepository;
+import com.apollo.backend.repository.TeamRepository;
 
 public class GenericTest {
 
@@ -48,7 +48,7 @@ public class GenericTest {
 	protected ObjectMapper oMapper = new ObjectMapper();
 
 	@Autowired
-	private ClientRepository clientRepository;
+	private TeamRepository clientRepository;
 
 	protected void clearDatabase() {
 		clientRepository.deleteAll();
