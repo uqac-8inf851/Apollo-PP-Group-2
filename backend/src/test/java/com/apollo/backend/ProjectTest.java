@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Task;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 
@@ -130,6 +131,60 @@ public class ProjectTest extends GenericTest {
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 		ResponseEntity<String> responseDelete = this.restTemplate.exchange(projectEndPoint, HttpMethod.DELETE, request, String.class);
 
+		assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
+	}
+
+	@Test
+	public void deleteProjectWithTaskTest() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("title", "description", program);
+		Map<String, Object> projectMap = getMap(project);
+		projectMap.put("program", getUrl() + "/program/" + program.getId());
+		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+		Task task = new Task("title", "description", 0, project);
+		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", response.getHeaders().getLocation());
+		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
+		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
+
+		URI projectEndPoint = response.getHeaders().getLocation();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("X-HTTP-Method-Override", "DELETE");
+		
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		ResponseEntity<String> responseDelete = this.restTemplate.exchange(projectEndPoint, HttpMethod.DELETE, request, String.class);
+
+		assertEquals(HttpStatus.CONFLICT, responseDelete.getStatusCode());
+	}
+
+	@Test
+	public void deleteProjectWithTaskDeletedTest() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("title", "description", program);
+		Map<String, Object> projectMap = getMap(project);
+		projectMap.put("program", getUrl() + "/program/" + program.getId());
+		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+		Task task = new Task("title", "description", 0, project);
+		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", response.getHeaders().getLocation());
+		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
+		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("X-HTTP-Method-Override", "DELETE");
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+
+		ResponseEntity<String> responseDeleteTask = this.restTemplate.exchange(responseTask.getHeaders().getLocation(), HttpMethod.DELETE, request, String.class);
+		assertEquals(HttpStatus.NO_CONTENT, responseDeleteTask.getStatusCode());
+
+		ResponseEntity<String> responseDelete = this.restTemplate.exchange(response.getHeaders().getLocation(), HttpMethod.DELETE, request, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
 	}
 }

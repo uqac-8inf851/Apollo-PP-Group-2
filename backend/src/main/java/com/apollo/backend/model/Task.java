@@ -1,6 +1,9 @@
 package com.apollo.backend.model;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,13 +20,18 @@ public class Task extends GenericEntity {
 
     private Integer priority;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     protected Task() {
     }
 
-    public Task(String title, String description, Integer priority) {
+    public Task(String title, String description, Integer priority, Project project) {
         this.setTitle(title);
         this.setDescription(description);
         this.setPriority(priority);
+        this.setProject(project);
     }
 
     public String getTitle() {
@@ -48,5 +56,13 @@ public class Task extends GenericEntity {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

@@ -16,7 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 import java.util.Map;
 
+import com.apollo.backend.model.Program;
+import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Task;
+import com.apollo.backend.repository.ProgramRepository;
+import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.TaskRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -24,6 +28,12 @@ public class TaskTest extends GenericTest {
 
 	@Autowired
 	private TaskRepository taskRepository;
+
+	@Autowired
+	private ProgramRepository programRepository;
+
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	private static boolean populatedDb = false;
 
@@ -38,7 +48,11 @@ public class TaskTest extends GenericTest {
 
 	@Test
 	public void saveNewTaskTest() throws Exception {
-		Task task = new Task("title", "description", 0);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = new Task("title", "description", 0, project);
 
 		Task response = taskRepository.save(task);
 
@@ -47,9 +61,14 @@ public class TaskTest extends GenericTest {
 
 	@Test
 	public void postNewTaskTest() throws Exception {
-		Task task = new Task("title", "description", 0);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+		
+		Task task = new Task("title", "description", 0, project);
 
 		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", getUrl() + "/project/" + project.getId());
 
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		
@@ -58,9 +77,14 @@ public class TaskTest extends GenericTest {
 
 	@Test
 	public void postGetAllTaskForEntitiesTest() throws Exception {
-		Task task = new Task("title", "description", 0);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = new Task("title", "description", 0, project);
 
 		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", getUrl() + "/project/" + project.getId());
 
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		
@@ -73,8 +97,13 @@ public class TaskTest extends GenericTest {
 
 	@Test
 	public void putTaskTest() throws Exception {
-		Task task = new Task("title", "description", 0);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = new Task("title", "description", 0, project);
 		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", getUrl() + "/project/" + project.getId());
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -98,8 +127,13 @@ public class TaskTest extends GenericTest {
 
 	@Test
 	public void deleteTaskTest() throws Exception {
-		Task task = new Task("title", "description", 0);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = new Task("title", "description", 0, project);
 		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", getUrl() + "/project/" + project.getId());
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 

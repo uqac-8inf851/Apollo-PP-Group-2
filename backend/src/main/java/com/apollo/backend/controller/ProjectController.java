@@ -61,6 +61,7 @@ public class ProjectController extends GenericController {
         Project saved = repository.save(project);
 
         List<Link> links = new ArrayList<Link>();
+        links.add(linkTo(Project.class).slash(baseLink).slash(saved.getId()).slash("tasks").withRel("tasks"));
         links.add(linkTo(Project.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
         links.add(linkTo(Project.class).slash(baseLink).slash(saved.getId()).withSelfRel());
 

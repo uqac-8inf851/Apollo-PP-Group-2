@@ -9,8 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.apollo.backend.repository.CategoryRepository;
+import com.apollo.backend.repository.ProgramRepository;
+import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.StatusRepository;
+import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TeamRepository;
+import com.apollo.backend.repository.TrackRepository;
+import com.apollo.backend.repository.UserRepository;
 
 public class GenericTest {
 
@@ -48,9 +54,37 @@ public class GenericTest {
 	protected ObjectMapper oMapper = new ObjectMapper();
 
 	@Autowired
-	private TeamRepository clientRepository;
+	private ProgramRepository programRepository;
+
+	@Autowired
+	private ProjectRepository projectRepository;
+
+	@Autowired
+	private TaskRepository taskRepository;
+
+	@Autowired
+	private TrackRepository trackRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private TeamRepository teamRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private StatusRepository statusRepository;
 
 	protected void clearDatabase() {
-		clientRepository.deleteAll();
+		trackRepository.deleteAll();
+		taskRepository.deleteAll();
+		statusRepository.deleteAll();
+		categoryRepository.deleteAll();
+		projectRepository.deleteAll();
+		programRepository.deleteAll();
+		teamRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 }
