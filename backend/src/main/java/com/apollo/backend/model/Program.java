@@ -1,6 +1,9 @@
 package com.apollo.backend.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,6 +17,9 @@ public class Program extends GenericEntity {
     @NotNull(message = "Description is mandatory")
     @Size(min = 1, max = 300, message = "Description must be between 1 and 300 characters")
     private String description;
+
+    @OneToMany(mappedBy = "program")
+    private List<Project> projects;
 
     protected Program() {
     }
@@ -37,5 +43,13 @@ public class Program extends GenericEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

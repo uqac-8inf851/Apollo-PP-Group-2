@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
+import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -24,6 +26,9 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+
+	@Autowired
+	private ProgramRepository programRepository;
 
 	private static boolean populatedDb = false;
 
@@ -38,7 +43,9 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testSave() throws Exception {
-		Project newObject = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project newObject = projectRepository.save(new Project("title", "description", program));
 
 		assertNotNull(newObject);
 	}
@@ -56,9 +63,12 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostJsonNewProperty() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "title");
 		map.put("description", "description");
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -69,8 +79,11 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostReturnPatternCreated() throws Exception {
-		Project project = new Project("title", "description");
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("title", "description", program);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -81,8 +94,11 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleSize() throws Exception {
-		Project project = new Project("", "description");
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("", "description", program);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -96,8 +112,11 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleNotNull() throws Exception {
-		Project project = new Project(null, "description");
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project(null, "description", program);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -111,8 +130,11 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleDescriptionSize() throws Exception {
-		Project project = new Project("", "");
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("", "", program);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -130,8 +152,11 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleDescriptionNotNull() throws Exception {
-		Project project = new Project(null, null);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project(null, null, program);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -150,7 +175,9 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonEmpty() throws Exception {
-		Project saved = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project saved = projectRepository.save(new Project("title", "description", program));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -163,12 +190,15 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonNewProperty() throws Exception {
-		Project saved = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project saved = projectRepository.save(new Project("title", "description", program));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", "title");
 		map.put("description", "description");
 		map.put("anotherProperty", "intruder");
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -179,9 +209,12 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutReturnPatternOk() throws Exception {
-		Project saved = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project saved = projectRepository.save(new Project("title", "description", program));
 		
 		Map<String, Object> map = getMap(saved);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -192,10 +225,13 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleSize() throws Exception {
-		Project project = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
 		project.setTitle("");
 
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -209,9 +245,12 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleNotNull() throws Exception {
-		Project project = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
 		project.setTitle(null);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -225,11 +264,14 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleDescriptionSize() throws Exception {
-		Project project = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
 		project.setTitle("");
 		project.setDescription("");
 
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -248,10 +290,13 @@ public class ProjectValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleDescriptionNotNull() throws Exception {
-		Project project = projectRepository.save(new Project("title", "description"));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
 		project.setTitle(null);
 		project.setDescription(null);
 		Map<String, Object> map = getMap(project);
+		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 

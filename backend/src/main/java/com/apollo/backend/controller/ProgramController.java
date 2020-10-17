@@ -61,6 +61,7 @@ public class ProgramController extends GenericController {
         Program saved = repository.save(program);
 
         List<Link> links = new ArrayList<Link>();
+        links.add(linkTo(Program.class).slash(baseLink).slash(saved.getId()).slash("projects").withRel("projects"));
         links.add(linkTo(Program.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
         links.add(linkTo(Program.class).slash(baseLink).slash(saved.getId()).withSelfRel());
 
