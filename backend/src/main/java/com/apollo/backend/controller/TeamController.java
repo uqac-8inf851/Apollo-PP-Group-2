@@ -1,7 +1,9 @@
 package com.apollo.backend.controller;
 
 import com.apollo.backend.model.Team;
+import com.apollo.backend.model.User;
 import com.apollo.backend.repository.TeamRepository;
+import com.apollo.backend.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 
@@ -33,6 +36,9 @@ public class TeamController extends GenericController {
     @Autowired
     private TeamRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private String baseLink = Team.class.getSimpleName().toLowerCase();
 
     @RequestMapping(method = RequestMethod.POST, value = "/team") 
@@ -48,6 +54,42 @@ public class TeamController extends GenericController {
         return processRequest(registered.get(), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/team/{id}/users") 
+    public @ResponseBody ResponseEntity<?> createPropertyReference(@RequestBody CollectionModel<String> incoming, @PathVariable Integer id) {
+        Optional<Team> registered = repository.findById(id);
+
+        List<User> childs = new ArrayList<User>();
+
+        for (Link link : incoming.getLinks()) {
+            String parameter = link.getHref().substring(link.getHref().lastIndexOf("/") + 1);
+
+            Optional<User> child = userRepository.findById(Integer.parseInt(parameter));
+
+            childs.add(child.get());
+        }
+
+        Team parent = registered.get();
+        parent.setUser(childs);
+        
+        repository.save(parent);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/team/{id}/users/{propertyId}") 
+    public @ResponseBody ResponseEntity<?> deletePropertyReference(@PathVariable Integer id, @PathVariable Integer propertyId) {
+
+        Optional<Team> registered = repository.findById(id);
+        Team parent = registered.get();
+
+        List<User> childs = parent.getUser();
+        childs.removeIf(x -> x.getId() == propertyId);
+        
+        repository.save(parent);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     private ResponseEntity<?> processRequest(Team team, HttpStatus httpStatus) {
         String[] messages = super.validRequest(team);
 
@@ -60,6 +102,7 @@ public class TeamController extends GenericController {
         Team saved = repository.save(team);
 
         List<Link> links = new ArrayList<Link>();
+        links.add(linkTo(Team.class).slash(baseLink).slash(saved.getId()).slash("users").withRel("users"));
         links.add(linkTo(Team.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
         links.add(linkTo(Team.class).slash(baseLink).slash(saved.getId()).withSelfRel());
 
