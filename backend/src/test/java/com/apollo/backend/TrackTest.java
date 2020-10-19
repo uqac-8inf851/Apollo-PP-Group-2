@@ -17,7 +17,13 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 
+import com.apollo.backend.model.Program;
+import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
+import com.apollo.backend.repository.ProgramRepository;
+import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TrackRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -25,6 +31,15 @@ public class TrackTest extends GenericTest {
 
 	@Autowired
 	private TrackRepository trackRepository;
+
+	@Autowired
+	private TaskRepository taskRepository;
+
+	@Autowired
+	private ProgramRepository programRepository;
+
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	private static boolean populatedDb = false;
 
@@ -39,7 +54,13 @@ public class TrackTest extends GenericTest {
 
 	@Test
 	public void saveNewTrackTest() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 
 		Track response = trackRepository.save(track);
 
@@ -48,9 +69,16 @@ public class TrackTest extends GenericTest {
 
 	@Test
 	public void postNewTrackTest() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 
 		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", getUrl() + "/task/" + task.getId());
 
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		
@@ -59,9 +87,16 @@ public class TrackTest extends GenericTest {
 
 	@Test
 	public void postGetAllTrackForEntitiesTest() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 
 		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", getUrl() + "/task/" + task.getId());
 
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		
@@ -74,8 +109,15 @@ public class TrackTest extends GenericTest {
 
 	@Test
 	public void putTrackTest() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", getUrl() + "/task/" + task.getId());
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -101,8 +143,15 @@ public class TrackTest extends GenericTest {
 
 	@Test
 	public void deleteTrackTest() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", getUrl() + "/task/" + task.getId());
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 

@@ -17,7 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.apollo.backend.model.Program;
+import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
+import com.apollo.backend.repository.ProgramRepository;
+import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TrackRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -25,6 +31,15 @@ public class TrackValidationTest extends GenericTest {
 
 	@Autowired
 	private TrackRepository trackRepository;
+
+	@Autowired
+	private TaskRepository taskRepository;
+
+	@Autowired
+	private ProgramRepository programRepository;
+
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	private static boolean populatedDb = false;
 
@@ -39,7 +54,13 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testSave() throws Exception {
-		Track newObject = trackRepository.save(new Track(Instant.now(), Instant.now()));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track newObject = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
 		assertNotNull(newObject);
 	}
@@ -57,9 +78,16 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPostJsonNewProperty() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", Instant.now());
 		map.put("endTime", Instant.now());
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -70,8 +98,15 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPostReturnPatternCreated() throws Exception {
-		Track track = new Track(Instant.now(), Instant.now());
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> map = getMap(track);
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -82,8 +117,15 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPostNameNotNull() throws Exception {
-		Track track = new Track(null, null);
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = new Track(null, null, task);
 		Map<String, Object> map = getMap(track);
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -98,7 +140,13 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonEmpty() throws Exception {
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now()));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -111,12 +159,19 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonNewProperty() throws Exception {
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now()));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", Instant.now());
 		map.put("endTime", Instant.now());
 		map.put("anotherProperty", "intruder");
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -127,9 +182,16 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPutReturnPatternOk() throws Exception {
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now()));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 		
 		Map<String, Object> map = getMap(saved);
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -140,9 +202,16 @@ public class TrackValidationTest extends GenericTest {
 
 	@Test
 	public void testPutStartTimeNotNull() throws Exception {
-		Track track = trackRepository.save(new Track(Instant.now(), Instant.now()));
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = projectRepository.save(new Project("title", "description", program));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project));
+
+		Track track = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 		track.setStartTime(null);
 		Map<String, Object> map = getMap(track);
+		map.put("task", getUrl() + "/task/" + task.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 

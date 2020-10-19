@@ -62,6 +62,7 @@ public class TaskController extends GenericController {
         Task saved = repository.save(task);
 
         List<Link> links = new ArrayList<Link>();
+        links.add(linkTo(Task.class).slash(baseLink).slash(saved.getId()).slash("tracks").withRel("tracks"));
         links.add(linkTo(Task.class).slash(baseLink).slash(saved.getId()).withRel(baseLink));
         links.add(linkTo(Task.class).slash(baseLink).slash(saved.getId()).withSelfRel());
 

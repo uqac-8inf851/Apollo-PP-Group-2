@@ -14,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Map;
 
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Task;
+import com.apollo.backend.model.Track;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.TaskRepository;
@@ -145,6 +147,70 @@ public class TaskTest extends GenericTest {
 		HttpEntity<String> request = new HttpEntity<String>(headers);
 		ResponseEntity<String> responseDelete = this.restTemplate.exchange(taskEndPoint, HttpMethod.DELETE, request, String.class);
 
+		assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
+	}
+
+	@Test
+	public void deleteTasktWithTrackTest() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("title", "description", program);
+		Map<String, Object> projectMap = getMap(project);
+		projectMap.put("program", getUrl() + "/program/" + program.getId());
+		ResponseEntity<Project> responseProject = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
+		assertEquals(HttpStatus.CREATED, responseProject.getStatusCode());
+
+		Task task = new Task("title", "description", 0, project);
+		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", responseProject.getHeaders().getLocation());
+		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
+		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
+		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", responseTask.getHeaders().getLocation());
+		ResponseEntity<Track> responseTrack = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
+		assertEquals(HttpStatus.CREATED, responseTrack.getStatusCode());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("X-HTTP-Method-Override", "DELETE");
+		
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		ResponseEntity<String> responseDelete = this.restTemplate.exchange(responseTask.getHeaders().getLocation(), HttpMethod.DELETE, request, String.class);
+
+		assertEquals(HttpStatus.CONFLICT, responseDelete.getStatusCode());
+	}
+
+	@Test
+	public void deleteTasktWithTrackDeletedTest() throws Exception {
+		Program program = programRepository.save(new Program("title", "description"));
+
+		Project project = new Project("title", "description", program);
+		Map<String, Object> projectMap = getMap(project);
+		projectMap.put("program", getUrl() + "/program/" + program.getId());
+		ResponseEntity<Project> responseProject = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
+		assertEquals(HttpStatus.CREATED, responseProject.getStatusCode());
+
+		Task task = new Task("title", "description", 0, project);
+		Map<String, Object> taskMap = getMap(task);
+		taskMap.put("project", responseProject.getHeaders().getLocation());
+		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
+		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
+
+		Track track = new Track(Instant.now(), Instant.now(), task);
+		Map<String, Object> trackMap = getMap(track);
+		trackMap.put("task", responseTask.getHeaders().getLocation());
+		ResponseEntity<Track> responseTrack = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
+		assertEquals(HttpStatus.CREATED, responseTrack.getStatusCode());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("X-HTTP-Method-Override", "DELETE");
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+
+		ResponseEntity<String> responseDeleteTrack = this.restTemplate.exchange(responseTrack.getHeaders().getLocation(), HttpMethod.DELETE, request, String.class);
+		assertEquals(HttpStatus.NO_CONTENT, responseDeleteTrack.getStatusCode());
+
+		ResponseEntity<String> responseDelete = this.restTemplate.exchange(responseTask.getHeaders().getLocation(), HttpMethod.DELETE, request, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
 	}
 }

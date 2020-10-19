@@ -1,9 +1,12 @@
 package com.apollo.backend.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -23,6 +26,9 @@ public class Task extends GenericEntity {
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToMany(mappedBy = "task")
+    private List<Track> tracks;
 
     protected Task() {
     }
@@ -64,5 +70,13 @@ public class Task extends GenericEntity {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public List<Track> getTrack() {
+        return tracks;
+    }
+
+    public void setTrack(List<Track> tracks) {
+        this.tracks = tracks;
     }
 }
