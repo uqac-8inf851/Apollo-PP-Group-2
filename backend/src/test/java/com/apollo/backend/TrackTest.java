@@ -17,10 +17,12 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 
+import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
+import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.TaskRepository;
@@ -41,6 +43,9 @@ public class TrackTest extends GenericTest {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
+
 	private static boolean populatedDb = false;
 
 	@BeforeEach
@@ -58,7 +63,9 @@ public class TrackTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 
@@ -73,7 +80,9 @@ public class TrackTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 
@@ -91,7 +100,9 @@ public class TrackTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 
@@ -113,7 +124,9 @@ public class TrackTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> trackMap = getMap(track);
@@ -147,7 +160,9 @@ public class TrackTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> trackMap = getMap(track);

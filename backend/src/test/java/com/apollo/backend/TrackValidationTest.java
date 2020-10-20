@@ -17,10 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
+import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.TaskRepository;
@@ -41,6 +43,9 @@ public class TrackValidationTest extends GenericTest {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
+
 	private static boolean populatedDb = false;
 
 	@BeforeEach
@@ -58,7 +63,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track newObject = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
@@ -82,7 +89,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", Instant.now());
@@ -102,7 +111,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(Instant.now(), Instant.now(), task);
 		Map<String, Object> map = getMap(track);
@@ -121,7 +132,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = new Track(null, null, task);
 		Map<String, Object> map = getMap(track);
@@ -144,7 +157,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
@@ -163,7 +178,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 
@@ -186,7 +203,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 		
@@ -206,7 +225,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category));
 
 		Track track = trackRepository.save(new Track(Instant.now(), Instant.now(), task));
 		track.setStartTime(null);

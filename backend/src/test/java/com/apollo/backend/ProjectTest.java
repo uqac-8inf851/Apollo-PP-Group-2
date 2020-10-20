@@ -16,9 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 import java.util.Map;
 
+import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Task;
+import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 
@@ -30,6 +32,9 @@ public class ProjectTest extends GenericTest {
 
 	@Autowired 
 	private ProgramRepository programRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	private static boolean populatedDb = false;
 
@@ -144,7 +149,9 @@ public class ProjectTest extends GenericTest {
 		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-		Task task = new Task("title", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = new Task("title", "description", 0, project, category);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", response.getHeaders().getLocation());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
@@ -171,7 +178,9 @@ public class ProjectTest extends GenericTest {
 		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-		Task task = new Task("title", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Task task = new Task("title", "description", 0, project, category);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", response.getHeaders().getLocation());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);

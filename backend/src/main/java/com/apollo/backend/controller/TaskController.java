@@ -46,6 +46,7 @@ public class TaskController extends GenericController {
         registered.get().setTitle(task.getContent().getTitle());
         registered.get().setDescription(task.getContent().getDescription());
         registered.get().setPriority(task.getContent().getPriority());
+        registered.get().setCategory(task.getContent().getCategory());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

@@ -30,14 +30,19 @@ public class Task extends GenericEntity {
     @OneToMany(mappedBy = "task")
     private List<Track> tracks;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     protected Task() {
     }
 
-    public Task(String title, String description, Integer priority, Project project) {
+    public Task(String title, String description, Integer priority, Project project, Category category) {
         this.setTitle(title);
         this.setDescription(description);
         this.setPriority(priority);
         this.setProject(project);
+        this.setCategory(category);
     }
 
     public String getTitle() {
@@ -78,5 +83,13 @@ public class Task extends GenericEntity {
 
     public void setTrack(List<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
