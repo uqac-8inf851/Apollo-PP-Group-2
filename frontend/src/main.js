@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import Vuetify from '@/plugins/vuetify'
+
 axios.defaults.baseURL = 'http://localhost:8081'
 
 library.add(faSortUp, faSortDown, faSort, faEdit, faTrashAlt, faPlusCircle, faSearch, faTimes, faChevronLeft, faChevronDown, faFileExport)
@@ -26,6 +28,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 new Vue({
+  vuetify: Vuetify,
   router,
   render: h => h(App)
 }).$mount('#app')
