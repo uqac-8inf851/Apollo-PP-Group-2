@@ -1,132 +1,106 @@
 <template>
   <v-app id="inspire">
-    <v-system-bar app>
+    <v-system-bar app height="50" color="light-green darken-2">
+      <v-avatar
+          class="d-block text-center mx-auto "
+          color="light-green lighten-5"
+          size="48"
+      >
+        <v-icon x-large>mdi-flask</v-icon>FP Institute
+      </v-avatar>
+      <v-toolbar-title>Apollo Institute</v-toolbar-title>
       <v-spacer></v-spacer>
-
-      <v-icon>mdi-square</v-icon>
-
-      <v-icon>mdi-circle</v-icon>
-
-      <v-icon>mdi-triangle</v-icon>
+      <v-icon color="light-green lighten-5">mdi-account-circle</v-icon>
     </v-system-bar>
 
-    <v-app-bar
-        app
-        clipped-right
-        flat
-        height="72"
-    >
-      <v-spacer></v-spacer>
-
-      <v-responsive max-width="156">
-        <v-text-field
-            dense
-            flat
-            hide-details
-            rounded
-            solo-inverted
-        ></v-text-field>
-      </v-responsive>
-    </v-app-bar>
-
-    <v-navigation-drawer
-        v-model="drawer"
-        app
-        width="300"
-    >
+    <v-navigation-drawer v-model="drawer" app width="300">
       <v-navigation-drawer
-          v-model="drawer"
-          absolute
-          color="grey lighten-3"
-          mini-variant
+        v-model="drawer"
+        absolute
+        color="grey lighten-3"
+        mini-variant
       >
-        <v-avatar
-            class="d-block text-center mx-auto mt-4"
-            color="grey darken-1"
-            size="48"
-        >
-        </v-avatar>
-
+        <v-spacer></v-spacer>
         <v-divider class="mx-3 my-5"></v-divider>
 
         <v-avatar
-            v-for="n in 6"
-            :key="n"
-            class="d-block text-center mx-auto mb-9"
-            color="grey lighten-1"
-            size="28"
-        ></v-avatar>
+          class="d-block text-center mx-auto mb-9"
+          color="grey lighten-1"
+          size="28"
+        >
+          <v-icon dark>mdi-billboard</v-icon>
+        </v-avatar>
+        <v-avatar
+          class="d-block text-center mx-auto mb-9"
+          color="grey lighten-1"
+          size="28"
+        >
+          <v-icon dark>mdi-clipboard-text-outline</v-icon>
+        </v-avatar>
+        <v-avatar
+          class="d-block text-center mx-auto mb-9"
+          color="grey lighten-1"
+          size="28"
+        >
+          <v-icon dark>mdi-file-chart-outline</v-icon>
+        </v-avatar>
+        <v-avatar
+          class="d-block text-center mx-auto mb-9"
+          color="grey lighten-1"
+          size="28"
+        >
+          <v-icon dark>mdi-account</v-icon>
+        </v-avatar>
+        <v-avatar
+          class="d-block text-center mx-auto mb-9"
+          color="grey lighten-1"
+          size="28"
+        >
+          <v-icon dark>mdi-settings-outline</v-icon>
+        </v-avatar>
       </v-navigation-drawer>
 
-      <v-sheet
-          color="grey lighten-5"
-          height="128"
-          width="100%"
-      ></v-sheet>
-
-      <v-list
-          class="pl-14"
-          shaped
-      >
-        <v-list-item
-            v-for="n in 5"
-            :key="n"
-            link
-        >
+      <v-list class="pl-14" shaped>
+        <v-btn
+          block
+          color="light-green darken-2"
+          text
+          elevation="2"
+        >New Project</v-btn>
+        <v-list-item v-for="n in 5" :key="n" link>
           <v-list-item-content>
-            <v-list-item-title>Item {{ n }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-navigation-drawer
-        app
-        clipped
-        right
-    >
-      <v-list>
-        <v-list-item
-            v-for="n in 5"
-            :key="n"
-            link
-        >
-          <v-list-item-content>
-            <v-list-item-title>Item {{ n }}</v-list-item-title>
+            <v-list-item-title>Project {{ n }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
     <v-main>
-      <!--  -->
+      <v-expansion-panels>
+        <v-expansion-panel v-for="(item, i) in 5" :key="i">
+          <v-expansion-panel-header>
+            Task {{ i+1 }} of Project 1
+            <template v-slot:actions>
+              <v-icon></v-icon>
+            </template>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-main>
-
-    <v-footer
-        app
-        color="transparent"
-        height="72"
-        inset
-    >
-      <v-text-field
-          background-color="grey lighten-1"
-          dense
-          flat
-          hide-details
-          rounded
-          solo
-      ></v-text-field>
-    </v-footer>
   </v-app>
 </template>
 
 <script>
 export default {
   data: () => ({ drawer: null }),
-}
-
+};
 </script>
 
 <style>
-
 </style>
