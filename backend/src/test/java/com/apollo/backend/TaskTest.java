@@ -20,11 +20,13 @@ import java.util.Map;
 import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
 import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -41,6 +43,9 @@ public class TaskTest extends GenericTest {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private StatusRepository statusRepository;
 
 	private static boolean populatedDb = false;
 
@@ -61,7 +66,9 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 
 		Task response = taskRepository.save(task);
 
@@ -76,10 +83,14 @@ public class TaskTest extends GenericTest {
 		
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", getUrl() + "/project/" + project.getId());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		
@@ -94,10 +105,14 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", getUrl() + "/project/" + project.getId());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		
@@ -116,9 +131,13 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", getUrl() + "/project/" + project.getId());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -129,7 +148,11 @@ public class TaskTest extends GenericTest {
 
 		responseTaskInserted.getBody().setTitle("Task modified 1");
 
-		HttpEntity<Task> requestUpdate = new HttpEntity<Task>(responseTaskInserted.getBody());
+		Map<String, Object> taskMapInserted = getMap(responseTaskInserted.getBody());
+		taskMapInserted.put("category", getUrl() + "/category/" + category.getId());
+		taskMapInserted.put("status", getUrl() + "/status/" + status.getId());
+
+		HttpEntity<Map<String, Object>> requestUpdate = new HttpEntity<Map<String, Object>>(taskMapInserted);
 		ResponseEntity<Task> responseModified = this.restTemplate.exchange(taskEndPoint, HttpMethod.PUT, requestUpdate, Task.class);
 		assertEquals(HttpStatus.OK, responseModified.getStatusCode());
 		assertEquals("Task modified 1", responseModified.getBody().getTitle());
@@ -148,9 +171,13 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", getUrl() + "/project/" + project.getId());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> response = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -177,9 +204,13 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", responseProject.getHeaders().getLocation());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 
@@ -210,9 +241,13 @@ public class TaskTest extends GenericTest {
 
 		Category category = categoryRepository.save(new Category("name"));
 
-		Task task = new Task("title", "description", 0, project, category);
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", responseProject.getHeaders().getLocation());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 

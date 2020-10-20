@@ -34,15 +34,20 @@ public class Task extends GenericEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "status_id")
+    private Status status;
+
     protected Task() {
     }
 
-    public Task(String title, String description, Integer priority, Project project, Category category) {
+    public Task(String title, String description, Integer priority, Project project, Category category, Status status) {
         this.setTitle(title);
         this.setDescription(description);
         this.setPriority(priority);
         this.setProject(project);
         this.setCategory(category);
+        this.setStatus(status);
     }
 
     public String getTitle() {
@@ -91,5 +96,13 @@ public class Task extends GenericEntity {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
