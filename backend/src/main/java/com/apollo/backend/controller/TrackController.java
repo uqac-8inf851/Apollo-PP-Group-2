@@ -45,6 +45,7 @@ public class TrackController extends GenericController {
         Optional<Track> registered = repository.findById(id);
         registered.get().setStartTime(track.getContent().getStartTime());
         registered.get().setEndTime(track.getContent().getEndTime());
+        registered.get().setUser(track.getContent().getUser());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

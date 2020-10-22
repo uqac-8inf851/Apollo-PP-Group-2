@@ -23,11 +23,13 @@ import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
+import com.apollo.backend.model.User;
 import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
+import com.apollo.backend.repository.UserRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TaskTest extends GenericTest {
@@ -46,6 +48,9 @@ public class TaskTest extends GenericTest {
 
 	@Autowired
 	private StatusRepository statusRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	private static boolean populatedDb = false;
 
@@ -214,9 +219,12 @@ public class TaskTest extends GenericTest {
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 
-		Track track = new Track(Instant.now(), Instant.now(), task);
+		User user = userRepository.save(new User("name", "role"));
+
+		Track track = new Track(Instant.now(), Instant.now(), task, user);
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", responseTask.getHeaders().getLocation());
+		trackMap.put("user", getUrl() + "/user/" + user.getId());
 		ResponseEntity<Track> responseTrack = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, responseTrack.getStatusCode());
 
@@ -251,9 +259,12 @@ public class TaskTest extends GenericTest {
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 
-		Track track = new Track(Instant.now(), Instant.now(), task);
+		User user = userRepository.save(new User("name", "role"));
+
+		Track track = new Track(Instant.now(), Instant.now(), task, user);
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", responseTask.getHeaders().getLocation());
+		trackMap.put("user", getUrl() + "/user/" + user.getId());
 		ResponseEntity<Track> responseTrack = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, responseTrack.getStatusCode());
 
