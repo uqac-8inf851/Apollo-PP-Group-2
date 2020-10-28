@@ -21,10 +21,11 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -39,7 +40,7 @@ public class TeamController extends GenericController {
     @Autowired
     private UserRepository userRepository;
 
-    private String baseLink = Team.class.getSimpleName().toLowerCase();
+    private String baseLink = Team.class.getSimpleName().toLowerCase(Locale.getDefault());
 
     @RequestMapping(method = RequestMethod.POST, value = "/team") 
     public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Team> team) {

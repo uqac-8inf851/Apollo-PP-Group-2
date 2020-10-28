@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -33,7 +34,7 @@ public class ProgramController extends GenericController {
     @Autowired
     private ProgramRepository repository;
 
-    private String baseLink = Program.class.getSimpleName().toLowerCase();
+    private String baseLink = Program.class.getSimpleName().toLowerCase(Locale.getDefault());
 
     @RequestMapping(method = RequestMethod.POST, value = "/program") 
     public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Program> program) {

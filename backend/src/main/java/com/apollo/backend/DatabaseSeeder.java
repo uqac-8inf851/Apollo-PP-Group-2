@@ -48,8 +48,6 @@ public class DatabaseSeeder {
     @Autowired
     private TaskRepository taskRepository;
 
-    public DatabaseSeeder() {}
-
     @EventListener
     public void seed(ContextRefreshedEvent event) {
 
@@ -60,24 +58,20 @@ public class DatabaseSeeder {
         seedProgram();
         seedProject();
         seedTask();
-        seedTrack();
 	}
-
-	private void seedTrack() {
-    }
 
     private void seedTask() {
         List<Project> projectList = new ArrayList<Project>();
 		projectRepository.findAll().forEach(projectList::add);
-		Optional<Project> project = projectList.stream().filter(x -> x.getTitle().equalsIgnoreCase("Build starship")).findFirst();
+		Optional<Project> project = projectList.stream().filter(x -> "Build starship".equalsIgnoreCase(x.getTitle())).findFirst();
 
         List<Category> categoryList = new ArrayList<Category>();
 		categoryRepository.findAll().forEach(categoryList::add);
-        Optional<Category> category = categoryList.stream().filter(x -> x.getName().equalsIgnoreCase("Category 1")).findFirst();
+        Optional<Category> category = categoryList.stream().filter(x -> "Category 1".equalsIgnoreCase(x.getName())).findFirst();
         
         List<Status> statusList = new ArrayList<Status>();
 		statusRepository.findAll().forEach(statusList::add);
-		Optional<Status> status = statusList.stream().filter(x -> x.getName().equalsIgnoreCase("Backlog")).findFirst();
+		Optional<Status> status = statusList.stream().filter(x -> "Backlog".equalsIgnoreCase(x.getName())).findFirst();
 
 		Task task = new Task("Build rocket first stage", "Let's do it!", 0, project.get(), category.get(), status.get());
 
@@ -90,19 +84,21 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Task item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle()))
+				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                taskRepository.save(nItem);
+			if(notExist) {
+				taskRepository.save(nItem);
+			}
 		}
     }
 
     private void seedProject() {
         List<Program> programList = new ArrayList<Program>();
 		programRepository.findAll().forEach(programList::add);
-		Optional<Program> program = programList.stream().filter(x -> x.getTitle().equalsIgnoreCase("Apollo 11")).findFirst();
+		Optional<Program> program = programList.stream().filter(x -> "Apollo 11".equalsIgnoreCase(x.getTitle())).findFirst();
 
 		Project project = new Project("Build starship", "We have to build the rocket to go to the moon.", program.get());
 
@@ -115,12 +111,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Project item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle()))
+				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                projectRepository.save(nItem);
+			if(notExist) {
+				projectRepository.save(nItem);
+			}
 		}
     }
 
@@ -136,12 +134,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Program item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle()))
+				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                programRepository.save(nItem);
+			if(notExist) {
+				programRepository.save(nItem);
+			}
 		}
     }
 
@@ -157,12 +157,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Status item : exists) {
-				if(item.getName().equalsIgnoreCase(nItem.getName()))
+				if(item.getName().equalsIgnoreCase(nItem.getName())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                statusRepository.save(nItem);
+			if(notExist) {
+				statusRepository.save(nItem);
+			}
 		}
     }
 
@@ -178,12 +180,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Category item : exists) {
-				if(item.getName().equalsIgnoreCase(nItem.getName()))
+				if(item.getName().equalsIgnoreCase(nItem.getName())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                categoryRepository.save(nItem);
+			if(notExist) {
+				categoryRepository.save(nItem);
+			}
 		}
     }
 
@@ -203,12 +207,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Team item : exists) {
-				if(item.getName().equalsIgnoreCase(nItem.getName()))
+				if(item.getName().equalsIgnoreCase(nItem.getName())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                teamRepository.save(nItem);
+			if(notExist) {
+				teamRepository.save(nItem);
+			}
 		}
     }
 
@@ -225,12 +231,14 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (User item : exists) {
-				if(item.getName().equalsIgnoreCase(nItem.getName()))
+				if(item.getName().equalsIgnoreCase(nItem.getName())) {
 					notExist = false;
+				}
 			}
 
-			if(notExist)
-                userRepository.save(nItem);
+			if(notExist) {
+				userRepository.save(nItem);
+			}
 		}
 	}
 }
