@@ -15,11 +15,11 @@ public class Project extends GenericEntity {
 
     @NotNull(message = "Title is mandatory")
     @Size(min = 1, max = 300, message = "Title must be between 1 and 300 characters")
-    private String title;
+    private String projectTitle;
 
     @NotNull(message = "Description is mandatory")
     @Size(min = 1, max = 300, message = "Description must be between 1 and 300 characters")
-    private String description;
+    private String projectDescription;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "program_id")
@@ -31,26 +31,26 @@ public class Project extends GenericEntity {
     protected Project() {
     }
 
-    public Project(String title, String description, Program program) {
-        this.setTitle(title);
-        this.setDescription(description);
+    public Project(String projectTitle, String projectDescription, Program program) {
+        this.setProjectTitle(projectTitle);
+        this.setProjectDescription(projectDescription);
         this.setProgram(program);
     }
 
-    public String getTitle() {
-        return title;
+    public String getProjectTitle() {
+        return projectTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
     }
 
-    public String getDescription() {
-        return description;
+    public String getProjectDescription() {
+        return projectDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
     }
 
     public Program getProgram() {

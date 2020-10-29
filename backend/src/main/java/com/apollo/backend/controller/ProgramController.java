@@ -44,8 +44,8 @@ public class ProgramController extends GenericController {
     @RequestMapping(method = RequestMethod.PUT, value = "/program/{id}") 
     public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Program> program, @PathVariable Integer id) {
         Optional<Program> registered = repository.findById(id);
-        registered.get().setTitle(program.getContent().getTitle());
-        registered.get().setDescription(program.getContent().getDescription());
+        registered.get().setProgramTitle(program.getContent().getProgramTitle());
+        registered.get().setProgramDescription(program.getContent().getProgramDescription());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

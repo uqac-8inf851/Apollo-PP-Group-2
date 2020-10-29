@@ -44,8 +44,8 @@ public class ProjectController extends GenericController {
     @RequestMapping(method = RequestMethod.PUT, value = "/project/{id}") 
     public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Project> project, @PathVariable Integer id) {
         Optional<Project> registered = repository.findById(id);
-        registered.get().setTitle(project.getContent().getTitle());
-        registered.get().setDescription(project.getContent().getDescription());
+        registered.get().setProjectTitle(project.getContent().getProjectTitle());
+        registered.get().setProjectDescription(project.getContent().getProjectDescription());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

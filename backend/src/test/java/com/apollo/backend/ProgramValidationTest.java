@@ -59,8 +59,8 @@ public class ProgramValidationTest extends GenericTest {
 	@Test
 	public void testPostJsonNewProperty() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("programTitle", "title");
+		map.put("programDescription", "description");
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -168,8 +168,8 @@ public class ProgramValidationTest extends GenericTest {
 		Program saved = programRepository.save(new Program("title", "description"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("programTitle", "title");
+		map.put("programDescription", "description");
 		map.put("anotherProperty", "intruder");
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
@@ -195,7 +195,7 @@ public class ProgramValidationTest extends GenericTest {
 	@Test
 	public void testPutTitleSize() throws Exception {
 		Program program = programRepository.save(new Program("title", "description"));
-		program.setTitle("");
+		program.setProgramTitle("");
 
 		Map<String, Object> map = getMap(program);
 
@@ -212,7 +212,7 @@ public class ProgramValidationTest extends GenericTest {
 	@Test
 	public void testPutTitleNotNull() throws Exception {
 		Program program = programRepository.save(new Program("title", "description"));
-		program.setTitle(null);
+		program.setProgramTitle(null);
 		Map<String, Object> map = getMap(program);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
@@ -228,8 +228,8 @@ public class ProgramValidationTest extends GenericTest {
 	@Test
 	public void testPutTitleDescriptionSize() throws Exception {
 		Program program = programRepository.save(new Program("title", "description"));
-		program.setTitle("");
-		program.setDescription("");
+		program.setProgramTitle("");
+		program.setProgramDescription("");
 
 		Map<String, Object> map = getMap(program);
 
@@ -251,8 +251,8 @@ public class ProgramValidationTest extends GenericTest {
 	@Test
 	public void testPutTitleDescriptionNotNull() throws Exception {
 		Program program = programRepository.save(new Program("title", "description"));
-		program.setTitle(null);
-		program.setDescription(null);
+		program.setProgramTitle(null);
+		program.setProgramDescription(null);
 		Map<String, Object> map = getMap(program);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);

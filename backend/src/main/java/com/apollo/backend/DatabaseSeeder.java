@@ -63,7 +63,7 @@ public class DatabaseSeeder {
     private void seedTask() {
         List<Project> projectList = new ArrayList<Project>();
 		projectRepository.findAll().forEach(projectList::add);
-		Optional<Project> project = projectList.stream().filter(x -> "Build starship".equalsIgnoreCase(x.getTitle())).findFirst();
+		Optional<Project> project = projectList.stream().filter(x -> "Build starship".equalsIgnoreCase(x.getProjectTitle())).findFirst();
 
         List<Category> categoryList = new ArrayList<Category>();
 		categoryRepository.findAll().forEach(categoryList::add);
@@ -84,7 +84,7 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Task item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
+				if(item.getTaskTitle().equalsIgnoreCase(nItem.getTaskTitle())) {
 					notExist = false;
 				}
 			}
@@ -98,7 +98,7 @@ public class DatabaseSeeder {
     private void seedProject() {
         List<Program> programList = new ArrayList<Program>();
 		programRepository.findAll().forEach(programList::add);
-		Optional<Program> program = programList.stream().filter(x -> "Apollo 11".equalsIgnoreCase(x.getTitle())).findFirst();
+		Optional<Program> program = programList.stream().filter(x -> "Apollo 11".equalsIgnoreCase(x.getProgramTitle())).findFirst();
 
 		Project project = new Project("Build starship", "We have to build the rocket to go to the moon.", program.get());
 
@@ -111,7 +111,7 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Project item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
+				if(item.getProjectTitle().equalsIgnoreCase(nItem.getProjectTitle())) {
 					notExist = false;
 				}
 			}
@@ -134,7 +134,7 @@ public class DatabaseSeeder {
 			boolean notExist = true;
 
 			for (Program item : exists) {
-				if(item.getTitle().equalsIgnoreCase(nItem.getTitle())) {
+				if(item.getProgramTitle().equalsIgnoreCase(nItem.getProgramTitle())) {
 					notExist = false;
 				}
 			}

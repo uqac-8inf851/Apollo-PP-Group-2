@@ -44,8 +44,8 @@ public class TaskController extends GenericController {
     @RequestMapping(method = RequestMethod.PUT, value = "/task/{id}") 
     public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Task> task, @PathVariable Integer id) {
         Optional<Task> registered = repository.findById(id);
-        registered.get().setTitle(task.getContent().getTitle());
-        registered.get().setDescription(task.getContent().getDescription());
+        registered.get().setTaskTitle(task.getContent().getTaskTitle());
+        registered.get().setTaskDescription(task.getContent().getTaskDescription());
         registered.get().setPriority(task.getContent().getPriority());
         registered.get().setCategory(task.getContent().getCategory());
         registered.get().setStatus(task.getContent().getStatus());

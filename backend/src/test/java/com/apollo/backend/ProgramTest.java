@@ -86,12 +86,12 @@ public class ProgramTest extends GenericTest {
 		assertEquals(HttpStatus.OK, responseProgramInserted.getStatusCode());
 		assertEquals(null, responseProgramInserted.getBody().getModDate());
 
-		responseProgramInserted.getBody().setTitle("Program modified 1");
+		responseProgramInserted.getBody().setProgramTitle("Program modified 1");
 
 		HttpEntity<Program> requestUpdate = new HttpEntity<Program>(responseProgramInserted.getBody());
 		ResponseEntity<Program> responseModified = this.restTemplate.exchange(programEndPoint, HttpMethod.PUT, requestUpdate, Program.class);
 		assertEquals(HttpStatus.OK, responseModified.getStatusCode());
-		assertEquals("Program modified 1", responseModified.getBody().getTitle());
+		assertEquals("Program modified 1", responseModified.getBody().getProgramTitle());
 
 		int compare = response.getBody().getModDate().compareTo(responseModified.getBody().getModDate());
 
