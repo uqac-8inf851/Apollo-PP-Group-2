@@ -48,18 +48,18 @@ public class CategoryService implements CategoryRepository {
     }
 
     @Override
-    public Optional<Category> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Category> findById(Integer idCategory) {
+        return repository.findById(idCategory);
     }
 
     @Override
-    public List<Category> findById(String id) {
-        return repository.findById(id);
+    public List<Category> findById(String idCategory) {
+        return repository.findById(idCategory);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idCategory) {
+        return repository.existsById(idCategory);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class CategoryService implements CategoryRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idCategory) {
+        repository.deleteById(idCategory);
     }
 
     @Override

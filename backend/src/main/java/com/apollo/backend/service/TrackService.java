@@ -48,18 +48,18 @@ public class TrackService implements TrackRepository {
     }
 
     @Override
-    public Optional<Track> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Track> findById(Integer idTrack) {
+        return repository.findById(idTrack);
     }
 
     @Override
-    public List<Track> findById(String id) {
-        return repository.findById(id);
+    public List<Track> findById(String idTrack) {
+        return repository.findById(idTrack);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idTrack) {
+        return repository.existsById(idTrack);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class TrackService implements TrackRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idTrack) {
+        repository.deleteById(idTrack);
     }
 
     @Override

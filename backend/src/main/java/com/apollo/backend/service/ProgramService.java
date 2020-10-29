@@ -48,18 +48,18 @@ public class ProgramService implements ProgramRepository {
     }
 
     @Override
-    public Optional<Program> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Program> findById(Integer idProgram) {
+        return repository.findById(idProgram);
     }
 
     @Override
-    public List<Program> findById(String id) {
-        return repository.findById(id);
+    public List<Program> findById(String idProgram) {
+        return repository.findById(idProgram);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idProgram) {
+        return repository.existsById(idProgram);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ProgramService implements ProgramRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idProgram) {
+        repository.deleteById(idProgram);
     }
 
     @Override
