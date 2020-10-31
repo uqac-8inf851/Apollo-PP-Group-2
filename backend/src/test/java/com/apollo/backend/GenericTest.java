@@ -28,9 +28,7 @@ public class GenericTest {
 
 	protected String getUrl() {
 		String server = "localhost";
-		String url = "http://" + server + ":" + port;
-
-		return url;
+		return "http://" + server + ":" + port;
 	}
 
 	protected Map<String, Object> getMap(Object object) throws Exception {

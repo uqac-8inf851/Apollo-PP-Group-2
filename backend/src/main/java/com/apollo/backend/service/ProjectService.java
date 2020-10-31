@@ -48,18 +48,18 @@ public class ProjectService implements ProjectRepository {
     }
 
     @Override
-    public Optional<Project> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Project> findById(Integer idProject) {
+        return repository.findById(idProject);
     }
 
     @Override
-    public List<Project> findById(String id) {
-        return repository.findById(id);
+    public List<Project> findById(String idProject) {
+        return repository.findById(idProject);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idProject) {
+        return repository.existsById(idProject);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ProjectService implements ProjectRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idProject) {
+        repository.deleteById(idProject);
     }
 
     @Override

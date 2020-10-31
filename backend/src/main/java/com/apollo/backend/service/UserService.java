@@ -48,18 +48,18 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<User> findById(Integer idUser) {
+        return repository.findById(idUser);
     }
 
     @Override
-    public List<User> findById(String id) {
-        return repository.findById(id);
+    public List<User> findById(String idUser) {
+        return repository.findById(idUser);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idUser) {
+        return repository.existsById(idUser);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idUser) {
+        repository.deleteById(idUser);
     }
 
     @Override

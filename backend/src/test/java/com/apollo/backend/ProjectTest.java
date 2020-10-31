@@ -11,7 +11,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class ProjectTest extends GenericTest {
 
 	@BeforeEach
 	public void setup() {
-		if(populatedDb) return;
+		if(populatedDb) { return; }
 
 		clearDatabase();
 
@@ -110,12 +112,12 @@ public class ProjectTest extends GenericTest {
 		assertEquals(HttpStatus.OK, responseProjectInserted.getStatusCode());
 		assertEquals(null, responseProjectInserted.getBody().getModDate());
 
-		responseProjectInserted.getBody().setTitle("Project modified 1");
+		responseProjectInserted.getBody().setProjectTitle("Project modified 1");
 
 		HttpEntity<Project> requestUpdate = new HttpEntity<Project>(responseProjectInserted.getBody());
 		ResponseEntity<Project> responseModified = this.restTemplate.exchange(projectEndPoint, HttpMethod.PUT, requestUpdate, Project.class);
 		assertEquals(HttpStatus.OK, responseModified.getStatusCode());
-		assertEquals("Project modified 1", responseModified.getBody().getTitle());
+		assertEquals("Project modified 1", responseModified.getBody().getProjectTitle());
 
 		int compare = response.getBody().getModDate().compareTo(responseModified.getBody().getModDate());
 
