@@ -18,10 +18,10 @@ public class Team extends GenericEntity {
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "team_user", 
+    @JoinTable(name = "team_person", 
       joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"), 
-      inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-    private List<User> users;
+      inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"))
+    private List<Person> persons;
 
     protected Team() {
     }
@@ -38,11 +38,11 @@ public class Team extends GenericEntity {
         this.name = name;
     }
 
-    public List<User> getUser() {
-        return users;
+    public List<Person> getPerson() {
+        return persons;
     }
 
-    public void setUser(List<User> users) {
-        this.users = users;
+    public void setPerson(List<Person> persons) {
+        this.persons = persons;
     }
 }

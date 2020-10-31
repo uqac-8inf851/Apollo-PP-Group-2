@@ -18,14 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.apollo.backend.model.User;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.model.Person;
+import com.apollo.backend.repository.PersonRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class UserValidationTest extends GenericTest {
+public class PersonValidationTest extends GenericTest {
 
 	@Autowired
-	private UserRepository userRepository;
+	private PersonRepository personRepository;
 
 	private static boolean populatedDb = false;
 
@@ -40,7 +40,7 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testSave() throws Exception {
-		User newObject = userRepository.save(new User("name", "role"));
+		Person newObject = personRepository.save(new Person("name", "role"));
 
 		assertNotNull(newObject);
 	}
@@ -51,7 +51,7 @@ public class UserValidationTest extends GenericTest {
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
@@ -64,31 +64,31 @@ public class UserValidationTest extends GenericTest {
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
 
 	@Test
 	public void testPostReturnPatternCreated() throws Exception {
-		User user = new User("name", "role");
-		Map<String, Object> map = getMap(user);
+		Person person = new Person("name", "role");
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
 
 	@Test
 	public void testPostNameSize() throws Exception {
-		User user = new User("", "role");
-		Map<String, Object> map = getMap(user);
+		Person person = new Person("", "role");
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -98,12 +98,12 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPostNameNotNull() throws Exception {
-		User user = new User(null, "role");
-		Map<String, Object> map = getMap(user);
+		Person person = new Person(null, "role");
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -113,12 +113,12 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPostNameRoleSize() throws Exception {
-		User user = new User("", "");
-		Map<String, Object> map = getMap(user);
+		Person person = new Person("", "");
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -132,12 +132,12 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPostNameRoleNotNull() throws Exception {
-		User user = new User(null, null);
-		Map<String, Object> map = getMap(user);
+		Person person = new Person(null, null);
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person", HttpMethod.POST, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -152,20 +152,20 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonEmpty() throws Exception {
-		User saved = userRepository.save(new User("name", "role"));
+		Person saved = personRepository.save(new Person("name", "role"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
 
 	@Test
 	public void testPutJsonNewProperty() throws Exception {
-		User saved = userRepository.save(new User("name", "role"));
+		Person saved = personRepository.save(new Person("name", "role"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", "name");
@@ -174,34 +174,34 @@ public class UserValidationTest extends GenericTest {
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 
 	@Test
 	public void testPutReturnPatternOk() throws Exception {
-		User saved = userRepository.save(new User("name", "role"));
+		Person saved = personRepository.save(new Person("name", "role"));
 		
 		Map<String, Object> map = getMap(saved);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 
 	@Test
 	public void testPutNameSize() throws Exception {
-		User user = userRepository.save(new User("name", "role"));
-		user.setName("");
+		Person person = personRepository.save(new Person("name", "role"));
+		person.setName("");
 
-		Map<String, Object> map = getMap(user);
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + user.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + person.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -211,13 +211,13 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPutNameNotNull() throws Exception {
-		User user = userRepository.save(new User("name", "role"));
-		user.setName(null);
-		Map<String, Object> map = getMap(user);
+		Person person = personRepository.save(new Person("name", "role"));
+		person.setName(null);
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + user.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + person.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -227,15 +227,15 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPutNameRoleSize() throws Exception {
-		User user = userRepository.save(new User("name", "role"));
-		user.setName("");
-		user.setRole("");
+		Person person = personRepository.save(new Person("name", "role"));
+		person.setName("");
+		person.setRole("");
 
-		Map<String, Object> map = getMap(user);
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + user.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + person.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -250,14 +250,14 @@ public class UserValidationTest extends GenericTest {
 
 	@Test
 	public void testPutNameRoleNotNull() throws Exception {
-		User user = userRepository.save(new User("name", "role"));
-		user.setName(null);
-		user.setRole(null);
-		Map<String, Object> map = getMap(user);
+		Person person = personRepository.save(new Person("name", "role"));
+		person.setName(null);
+		person.setRole(null);
+		Map<String, Object> map = getMap(person);
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/user/" + user.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/person/" + person.getId(), HttpMethod.PUT, httpEntity, String.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 

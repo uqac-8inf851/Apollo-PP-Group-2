@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class User extends GenericEntity {
+public class Person extends GenericEntity {
 
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 300, message = "Name must be between 1 and 300 characters")
@@ -15,10 +15,10 @@ public class User extends GenericEntity {
     @Size(min = 1, max = 300, message = "Role must be between 1 and 300 characters")
     private String role;
 
-    protected User() {
+    protected Person() {
     }
 
-    public User(String name, String role) {
+    public Person(String name, String role) {
         this.setName(name);
         this.setRole(role);
     }

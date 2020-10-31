@@ -24,14 +24,14 @@ import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
-import com.apollo.backend.model.User;
+import com.apollo.backend.model.Person;
 import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TrackRepository;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TrackValidationTest extends GenericTest {
@@ -55,7 +55,7 @@ public class TrackValidationTest extends GenericTest {
 	private StatusRepository statusRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private PersonRepository personRepository;
 
 	private static boolean populatedDb = false;
 
@@ -80,9 +80,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track newObject = trackRepository.save(new Track(Instant.now(), Instant.now(), task, user));
+		Track newObject = trackRepository.save(new Track(Instant.now(), Instant.now(), task, person));
 
 		assertNotNull(newObject);
 	}
@@ -110,13 +110,13 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", Instant.now());
 		map.put("endTime", Instant.now());
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -137,12 +137,12 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 		Map<String, Object> map = getMap(track);
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -163,12 +163,12 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(null, null, task, user);
+		Track track = new Track(null, null, task, person);
 		Map<String, Object> map = getMap(track);
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -193,9 +193,9 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 		
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, user));
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, person));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -218,16 +218,16 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, user));
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, person));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("startTime", Instant.now());
 		map.put("endTime", Instant.now());
 		map.put("anotherProperty", "intruder");
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -248,13 +248,13 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, user));
+		Track saved = trackRepository.save(new Track(Instant.now(), Instant.now(), task, person));
 		
 		Map<String, Object> map = getMap(saved);
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -275,13 +275,13 @@ public class TrackValidationTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = trackRepository.save(new Track(Instant.now(), Instant.now(), task, user));
+		Track track = trackRepository.save(new Track(Instant.now(), Instant.now(), task, person));
 		track.setStartTime(null);
 		Map<String, Object> map = getMap(track);
 		map.put("task", getUrl() + "/task/" + task.getId());
-		map.put("user", getUrl() + "/user/" + user.getId());
+		map.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 

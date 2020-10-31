@@ -3,9 +3,9 @@ package com.apollo.backend.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.apollo.backend.domain.UserDomain;
-import com.apollo.backend.model.User;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.domain.PersonDomain;
+import com.apollo.backend.model.Person;
+import com.apollo.backend.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,49 +17,49 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Primary
-@Repository("userService")
-public class UserService implements UserRepository {
+@Repository("personService")
+public class PersonService implements PersonRepository {
 
     @Autowired
-    @Qualifier("userRepository")
-    private UserRepository repository;
+    @Qualifier("personRepository")
+    private PersonRepository repository;
 
     @Autowired
     private ApplicationContext applicationContext;
 
     @Override
-    public Iterable<User> findAll() {
+    public Iterable<Person> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public Iterable<User> findAll(Sort sort) {
+    public Iterable<Person> findAll(Sort sort) {
         return repository.findAll(sort);
     }
 
     @Override
-    public Page<User> findAll(Pageable pageable) {
+    public Page<Person> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Override
-    public Iterable<User> findAllById(Iterable<Integer> ids) {
+    public Iterable<Person> findAllById(Iterable<Integer> ids) {
         return repository.findAllById(ids);
     }
 
     @Override
-    public Optional<User> findById(Integer idUser) {
-        return repository.findById(idUser);
+    public Optional<Person> findById(Integer idPerson) {
+        return repository.findById(idPerson);
     }
 
     @Override
-    public List<User> findById(String idUser) {
-        return repository.findById(idUser);
+    public List<Person> findById(String idPerson) {
+        return repository.findById(idPerson);
     }
 
     @Override
-    public boolean existsById(Integer idUser) {
-        return repository.existsById(idUser);
+    public boolean existsById(Integer idPerson) {
+        return repository.existsById(idPerson);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    public void deleteById(Integer idUser) {
-        repository.deleteById(idUser);
+    public void deleteById(Integer idPerson) {
+        repository.deleteById(idPerson);
     }
 
     @Override
-    public void delete(User entity) {
+    public void delete(Person entity) {
         repository.delete(entity);
     }
 
@@ -83,20 +83,20 @@ public class UserService implements UserRepository {
     }
 
     @Override
-    public void deleteAll(Iterable<? extends User> entities) {
+    public void deleteAll(Iterable<? extends Person> entities) {
         repository.deleteAll(entities);
     }
 
     @Override
-    public <S extends User> Iterable<S> saveAll(Iterable<S> entities) {
+    public <S extends Person> Iterable<S> saveAll(Iterable<S> entities) {
         return repository.saveAll(entities);
     }
 
     @Override
-    public <S extends User> S save(S user) {
+    public <S extends Person> S save(S person) {
 
-        UserDomain userDomain = applicationContext.getBean(UserDomain.class);
+        PersonDomain personDomain = applicationContext.getBean(PersonDomain.class);
         
-        return repository.save(user);
+        return repository.save(person);
     }
 }

@@ -16,7 +16,7 @@ import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TeamRepository;
 import com.apollo.backend.repository.TrackRepository;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 public class GenericTest {
 
@@ -64,7 +64,7 @@ public class GenericTest {
 	private TrackRepository trackRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private PersonRepository personRepository;
 
 	@Autowired
 	private TeamRepository teamRepository;
@@ -83,6 +83,6 @@ public class GenericTest {
 		projectRepository.deleteAll();
 		programRepository.deleteAll();
 		teamRepository.deleteAll();
-		userRepository.deleteAll();
+		personRepository.deleteAll();
 	}
 }

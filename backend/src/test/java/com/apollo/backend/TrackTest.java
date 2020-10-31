@@ -25,14 +25,14 @@ import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Track;
-import com.apollo.backend.model.User;
+import com.apollo.backend.model.Person;
 import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TrackRepository;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TrackTest extends GenericTest {
@@ -56,7 +56,7 @@ public class TrackTest extends GenericTest {
 	private StatusRepository statusRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private PersonRepository personRepository;
 
 	private static boolean populatedDb = false;
 
@@ -81,9 +81,9 @@ public class TrackTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 
 		Track response = trackRepository.save(track);
 
@@ -102,13 +102,13 @@ public class TrackTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", getUrl() + "/task/" + task.getId());
-		trackMap.put("user", getUrl() + "/user/" + user.getId());
+		trackMap.put("person", getUrl() + "/person/" + person.getId());
 
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		
@@ -127,13 +127,13 @@ public class TrackTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", getUrl() + "/task/" + task.getId());
-		trackMap.put("user", getUrl() + "/user/" + user.getId());
+		trackMap.put("person", getUrl() + "/person/" + person.getId());
 
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		
@@ -156,12 +156,12 @@ public class TrackTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", getUrl() + "/task/" + task.getId());
-		trackMap.put("user", getUrl() + "/user/" + user.getId());
+		trackMap.put("person", getUrl() + "/person/" + person.getId());
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
@@ -175,7 +175,7 @@ public class TrackTest extends GenericTest {
 		responseTrackInserted.getBody().setEndTime(now);
 
 		Map<String, Object> mapTrackInserted = getMap(responseTrackInserted.getBody());
-		mapTrackInserted.put("user", getUrl() + "/user/" + user.getId());
+		mapTrackInserted.put("person", getUrl() + "/person/" + person.getId());
 
 		HttpEntity<Map<String, Object>> requestUpdate = new HttpEntity<Map<String, Object>>(mapTrackInserted);
 		ResponseEntity<Track> responseModified = this.restTemplate.exchange(trackEndPoint, HttpMethod.PUT, requestUpdate, Track.class);
@@ -200,12 +200,12 @@ public class TrackTest extends GenericTest {
 
 		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
-		User user = userRepository.save(new User("name", "role"));
+		Person person = personRepository.save(new Person("name", "role"));
 
-		Track track = new Track(Instant.now(), Instant.now(), task, user);
+		Track track = new Track(Instant.now(), Instant.now(), task, person);
 		Map<String, Object> trackMap = getMap(track);
 		trackMap.put("task", getUrl() + "/task/" + task.getId());
-		trackMap.put("user", getUrl() + "/user/" + user.getId());
+		trackMap.put("person", getUrl() + "/person/" + person.getId());
 		ResponseEntity<Track> response = restTemplate.postForEntity(getUrl() + "/track", trackMap, Track.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 

@@ -2,16 +2,16 @@ package com.apollo.backend.domain;
 
 import javax.persistence.EntityManager;
 
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDomain {
+public class PersonDomain {
 
     @Autowired
-    private UserRepository repository;
+    private PersonRepository repository;
 
     @Autowired
     private EntityManager entityManager;

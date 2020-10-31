@@ -10,14 +10,14 @@ import com.apollo.backend.model.Project;
 import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
 import com.apollo.backend.model.Team;
-import com.apollo.backend.model.User;
+import com.apollo.backend.model.Person;
 import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
 import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 import com.apollo.backend.repository.TeamRepository;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 public class DatabaseSeeder {
 
     @Autowired
-    private UserRepository userRepository;
+    private PersonRepository personRepository;
 
     @Autowired
     private TeamRepository teamRepository;
@@ -51,7 +51,7 @@ public class DatabaseSeeder {
     @EventListener
     public void seed(ContextRefreshedEvent event) {
 
-        seedUser();
+        seedPerson();
         seedTeam();
         seedCategory();
         seedStatus();
@@ -192,11 +192,11 @@ public class DatabaseSeeder {
     }
 
     private void seedTeam() {
-		List<User> userList = new ArrayList<User>();
-		userRepository.findAll().forEach(userList::add);
+		List<Person> personList = new ArrayList<Person>();
+		personRepository.findAll().forEach(personList::add);
 
 		Team team = new Team("PP Group 2");
-		team.setUser(userList);
+		team.setPerson(personList);
 
         List<Team> news = new ArrayList<Team>();
         news.add(team);
@@ -218,26 +218,26 @@ public class DatabaseSeeder {
 		}
     }
 
-    private void seedUser() {
-		List<User> news = new ArrayList<User>();
-        news.add(new User("Fabio", "Lab Head"));
-        news.add(new User("Carlos", "Team Member"));
-        news.add(new User("Mário", "Team Member"));
-        news.add(new User("Eduardo", "Team Member"));
+    private void seedPerson() {
+		List<Person> news = new ArrayList<Person>();
+        news.add(new Person("Fabio", "Lab Head"));
+        news.add(new Person("Carlos", "Team Member"));
+        news.add(new Person("Mário", "Team Member"));
+        news.add(new Person("Eduardo", "Team Member"));
 
-		Iterable<User> exists = userRepository.findAll();
+		Iterable<Person> exists = personRepository.findAll();
 
-		for (User nItem : news) {
+		for (Person nItem : news) {
 			boolean notExist = true;
 
-			for (User item : exists) {
+			for (Person item : exists) {
 				if(item.getName().equalsIgnoreCase(nItem.getName())) {
 					notExist = false;
 				}
 			}
 
 			if(notExist) {
-				userRepository.save(nItem);
+				personRepository.save(nItem);
 			}
 		}
 	}

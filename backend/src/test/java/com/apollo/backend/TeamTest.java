@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.apollo.backend.model.Team;
-import com.apollo.backend.model.User;
+import com.apollo.backend.model.Person;
 import com.apollo.backend.repository.TeamRepository;
-import com.apollo.backend.repository.UserRepository;
+import com.apollo.backend.repository.PersonRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TeamTest extends GenericTest {
@@ -34,7 +34,7 @@ public class TeamTest extends GenericTest {
 	private TeamRepository teamRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private PersonRepository personRepository;
 
 	private static boolean populatedDb = false;
 
@@ -48,14 +48,14 @@ public class TeamTest extends GenericTest {
 	}
 
 	@Test
-	public void saveNewTeamWithUserTest() throws Exception {
-		User user = userRepository.save(new User("name", "role"));
+	public void saveNewTeamWithPersonTest() throws Exception {
+		Person person = personRepository.save(new Person("name", "role"));
 
-		List<User> users = new ArrayList<User>();
-		users.add(user);
+		List<Person> persons = new ArrayList<Person>();
+		persons.add(person);
 
 		Team team = new Team("name");
-		team.setUser(users);
+		team.setPerson(persons);
 
 		Team response = teamRepository.save(team);
 
@@ -63,7 +63,7 @@ public class TeamTest extends GenericTest {
 	}
 
 	@Test
-	public void saveNewTeamWithOutUserTest() throws Exception {
+	public void saveNewTeamWithOutPersonTest() throws Exception {
 		Team team = new Team("name");
 
 		Team response = teamRepository.save(team);
@@ -83,9 +83,9 @@ public class TeamTest extends GenericTest {
 	}
 
 	@Test
-	public void postNewTeamWithUserTest() throws Exception {
-		User user1 = userRepository.save(new User("name user 1", "role"));
-		User user2 = userRepository.save(new User("name user 1", "role"));
+	public void postNewTeamWithPersonTest() throws Exception {
+		Person person1 = personRepository.save(new Person("name person 1", "role"));
+		Person person2 = personRepository.save(new Person("name person 1", "role"));
 
 		Team team = new Team("name");
 
@@ -97,16 +97,16 @@ public class TeamTest extends GenericTest {
 		requestHeaders.add("Content-type", "text/uri-list");
 
 		HttpEntity<String> httpEntity = new HttpEntity<>(
-			getUrl() + "/user/" + user1.getId() + "\n" +
-			getUrl() + "/user/" + user2.getId(), requestHeaders);
+			getUrl() + "/person/" + person1.getId() + "\n" +
+			getUrl() + "/person/" + person2.getId(), requestHeaders);
 
-		ResponseEntity<String> relationResponse = restTemplate.exchange(response.getHeaders().getLocation() + "/users", HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> relationResponse = restTemplate.exchange(response.getHeaders().getLocation() + "/persons", HttpMethod.PUT, httpEntity, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, relationResponse.getStatusCode());
 
-		String jsonResponse = restTemplate.getForObject(response.getHeaders().getLocation() + "/users", String.class);
+		String jsonResponse = restTemplate.getForObject(response.getHeaders().getLocation() + "/persons", String.class);
 		JSONObject jsonObj = new JSONObject(jsonResponse).getJSONObject("_embedded");
-		JSONArray jsonArray = jsonObj.getJSONArray("user");
-		assertEquals("name user 1", jsonArray.getJSONObject(0).getString("name"));
+		JSONArray jsonArray = jsonObj.getJSONArray("person");
+		assertEquals("name person 1", jsonArray.getJSONObject(0).getString("name"));
 	}
 
 	@Test
@@ -169,16 +169,16 @@ public class TeamTest extends GenericTest {
 
 	@Test
 	public void deleteNxNRelationshipTest() throws Exception {
-		User user = userRepository.save(new User("name user 1", "role"));
-		String userEndPoint = getUrl() + "/user/" + user.getId();
+		Person person = personRepository.save(new Person("name person 1", "role"));
+		String personEndPoint = getUrl() + "/person/" + person.getId();
 
 		Team team = teamRepository.save(new Team("name"));
 		String teamEndPoint = getUrl() + "/team/" + team.getId();
 
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.add("Content-type", "text/uri-list");
-		HttpEntity<String> httpEntityForPut = new HttpEntity<>(userEndPoint, requestHeaders);
-		ResponseEntity<String> relationResponse = restTemplate.exchange(teamEndPoint + "/users", HttpMethod.PUT, httpEntityForPut, String.class);
+		HttpEntity<String> httpEntityForPut = new HttpEntity<>(personEndPoint, requestHeaders);
+		ResponseEntity<String> relationResponse = restTemplate.exchange(teamEndPoint + "/persons", HttpMethod.PUT, httpEntityForPut, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, relationResponse.getStatusCode());
 
 		HttpHeaders requestHeadersDelete = new HttpHeaders();
@@ -187,8 +187,8 @@ public class TeamTest extends GenericTest {
 		HttpEntity<String> httpEntityForDelete = new HttpEntity<>(requestHeadersDelete);
 		ResponseEntity<String> responseDelete = this.restTemplate.exchange(
 			teamEndPoint + 
-			"/users/" + 
-			user.getId(), 
+			"/persons/" + 
+			person.getId(), 
 		HttpMethod.DELETE, httpEntityForDelete, String.class);
 
 		assertEquals(HttpStatus.NO_CONTENT, responseDelete.getStatusCode());
@@ -196,8 +196,8 @@ public class TeamTest extends GenericTest {
 
 	@Test
 	public void deleteMasterOfNxNRelationshipTest() throws Exception {
-		User user = userRepository.save(new User("name user 1", "role"));
-		String userEndPoint = getUrl() + "/user/" + user.getId();
+		Person person = personRepository.save(new Person("name person 1", "role"));
+		String personEndPoint = getUrl() + "/person/" + person.getId();
 
 		Team team = teamRepository.save(new Team("name"));
 		String teamEndPoint = getUrl() + "/team/" + team.getId();
@@ -205,8 +205,8 @@ public class TeamTest extends GenericTest {
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.add("Content-type", "text/uri-list");
 
-		HttpEntity<String> httpEntityForPut = new HttpEntity<>(userEndPoint, requestHeaders);
-		ResponseEntity<String> relationResponse = restTemplate.exchange(teamEndPoint + "/users", HttpMethod.PUT, httpEntityForPut, String.class);
+		HttpEntity<String> httpEntityForPut = new HttpEntity<>(personEndPoint, requestHeaders);
+		ResponseEntity<String> relationResponse = restTemplate.exchange(teamEndPoint + "/persons", HttpMethod.PUT, httpEntityForPut, String.class);
 		assertEquals(HttpStatus.NO_CONTENT, relationResponse.getStatusCode());
 
 		HttpHeaders headers = new HttpHeaders();
