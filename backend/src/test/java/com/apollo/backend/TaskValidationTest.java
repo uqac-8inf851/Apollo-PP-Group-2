@@ -42,6 +42,18 @@ public class TaskValidationTest extends GenericTest {
 		populatedDb = true;
 	}
 
+	private ResponseEntity<String> doPost(Map<String, Object> map) {
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
+
+		return restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+	}
+
+	private ResponseEntity<String> doPut(Map<String, Object> map, Integer id) {
+		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
+
+		return restTemplate.exchange(getUrl() + "/task/" + id, HttpMethod.PUT, httpEntity, String.class);
+	}
+
 	@Test
 	public void testSave() throws Exception {
 
@@ -56,9 +68,7 @@ public class TaskValidationTest extends GenericTest {
 	public void testPostJsonEmpty() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
@@ -74,9 +84,7 @@ public class TaskValidationTest extends GenericTest {
 		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
 		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
@@ -90,9 +98,7 @@ public class TaskValidationTest extends GenericTest {
 		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
 		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
@@ -104,9 +110,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(taskBuild.getTask());
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -121,9 +125,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(taskBuild.getTask());
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -138,9 +140,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(taskBuild.getTask());
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -159,9 +159,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(taskBuild.getTask());
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task", HttpMethod.POST, httpEntity, String.class);
+		ResponseEntity<String> response = doPost(map);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -182,9 +180,7 @@ public class TaskValidationTest extends GenericTest {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, saved.getId());
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 	}
@@ -204,9 +200,7 @@ public class TaskValidationTest extends GenericTest {
 		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
 		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, saved.getId());
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
@@ -222,9 +216,7 @@ public class TaskValidationTest extends GenericTest {
 		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
 		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + saved.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, saved.getId());
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
@@ -239,9 +231,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + task.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, task.getId());
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -258,9 +248,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + task.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, task.getId());
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -279,9 +267,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + task.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, task.getId());
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
@@ -304,9 +290,7 @@ public class TaskValidationTest extends GenericTest {
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
-		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
-
-		ResponseEntity<String> response = restTemplate.exchange(getUrl() + "/task/" + task.getId(), HttpMethod.PUT, httpEntity, String.class);
+		ResponseEntity<String> response = doPut(map, task.getId());
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
