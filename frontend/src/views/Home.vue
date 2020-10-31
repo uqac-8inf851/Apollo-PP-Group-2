@@ -1,42 +1,45 @@
 <template>
-  <div>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <h1>{{ title }}</h1>
-          <h3>Message from backend: {{ message }}</h3>
-          <button type="button" class="btn btn-primary">bootstrap button</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-app id="inspire">
+    <v-system-bar app height="50" color="light-green darken-2">
+      <v-icon large color="white">mdi-flask</v-icon>
+      <v-toolbar-title class="toolbar-title">Apollo Institute</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-icon color="light-green lighten-5">mdi-account-circle</v-icon>
+    </v-system-bar>
+
+    <v-navigation-drawer v-model="drawer" app width="300">
+      <Menu />
+      <Project />
+    </v-navigation-drawer>
+
+    <Task />
+  </v-app>
 </template>
 
 <script>
-import axios from 'axios'
-
-window.axios = require("axios");
+import Task from '../components/Task.vue'
+import Project from '../components/Project.vue'
+import Menu from '../components/Menu.vue'
 
 export default {
   name: 'Home',
-
   components: {
-
+    Task,
+    Project,
+    Menu
   },
   data() {
     return {
-      title: "Hello Home",
-      message: null,
+      drawer: null
     };
   },
   mounted() {
-    axios
-      .get("/hello")
-      .then(response => (this.message = response.data));
   }
 };
 </script>
 
-<style>
-
+<style scoped>
+.toolbar-title {
+  margin-left: 20px;
+}
 </style>
