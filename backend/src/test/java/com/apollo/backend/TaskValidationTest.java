@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.apollo.backend.model.Category;
-import com.apollo.backend.model.Program;
-import com.apollo.backend.model.Project;
-import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
-import com.apollo.backend.repository.CategoryRepository;
-import com.apollo.backend.repository.ProgramRepository;
-import com.apollo.backend.repository.ProjectRepository;
-import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -35,17 +28,8 @@ public class TaskValidationTest extends GenericTest {
 	@Autowired
 	private TaskRepository taskRepository;
 
-	@Autowired
-	private ProgramRepository programRepository;
-
-	@Autowired
-	private ProjectRepository projectRepository;
-
-	@Autowired
-	private CategoryRepository categoryRepository;
-
-	@Autowired
-	private StatusRepository statusRepository;
+    @Autowired
+    private ApplicationContext applicationContext;
 
 	private static boolean populatedDb = false;
 
@@ -60,16 +44,11 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testSave() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
+
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
+
+		Task newObject = taskRepository.save(taskBuild.getTask());
 		
-		Project project = projectRepository.save(new Project("title", "description", program));
-		
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task newObject = taskRepository.save(new Task("title", "description", 0, project, category, status));
-
 		assertNotNull(newObject);
 	}
 
@@ -86,22 +65,14 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostJsonNewProperty() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
-
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskTitle", "title");
 		map.put("taskDescription", "description");
-		map.put("project", getUrl() + "/project/" + project.getId());
-		map.put("category", getUrl() + "/category/" + category.getId());
-		map.put("status", getUrl() + "/status/" + status.getId());
-		map.put("category", getUrl() + "/category/" + category.getId());
-		map.put("status", getUrl() + "/status/" + status.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
+		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
+		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -112,19 +83,12 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostReturnPatternCreated() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = new Task("title", "description", 0, project, category, status);
-		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
-		map.put("category", getUrl() + "/category/" + category.getId());
-		map.put("status", getUrl() + "/status/" + status.getId());
+		Map<String, Object> map = getMap(taskBuild.getTask());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
+		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
+		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -135,17 +99,10 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleSize() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = new Task("", "description", 0, project, category, status);
-		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		Map<String, Object> map = getMap(taskBuild.getTask());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -159,17 +116,10 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleNotNull() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, null, "description");
 		
-		Project project = projectRepository.save(new Project("title", "description", program));
-
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = new Task(null, "description", 0, project, category, status);
-		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		Map<String, Object> map = getMap(taskBuild.getTask());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -183,17 +133,10 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleDescriptionSize() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "", "");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = new Task("", "", 0, project, category, status);
-		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		Map<String, Object> map = getMap(taskBuild.getTask());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -211,17 +154,10 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPostTitleDescriptionNotNull() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, null, null);
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = new Task(null, null, 0, project, category, status);
-		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		Map<String, Object> map = getMap(taskBuild.getTask());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -240,15 +176,9 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonEmpty() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task saved = taskRepository.save(taskBuild.getTask());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -261,24 +191,18 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutJsonNewProperty() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task saved = taskRepository.save(taskBuild.getTask());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskTitle", "title");
 		map.put("taskDescription", "description");
 		map.put("priority", 0);
 		map.put("anotherProperty", "intruder");
-		map.put("project", getUrl() + "/project/" + project.getId());
-		map.put("category", getUrl() + "/category/" + category.getId());
-		map.put("status", getUrl() + "/status/" + status.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
+		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
+		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -289,20 +213,14 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutReturnPatternOk() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task saved = taskRepository.save(taskBuild.getTask());
 		
 		Map<String, Object> map = getMap(saved);
-		map.put("project", getUrl() + "/project/" + project.getId());
-		map.put("category", getUrl() + "/category/" + category.getId());
-		map.put("status", getUrl() + "/status/" + status.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
+		map.put("category", getUrl() + "/category/" + taskBuild.getCategory().getId());
+		map.put("status", getUrl() + "/status/" + taskBuild.getStatus().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -313,19 +231,13 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleSize() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task task = taskRepository.save(taskBuild.getTask());
 		task.setTaskTitle("");
 
 		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -339,18 +251,12 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleNotNull() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task task = taskRepository.save(taskBuild.getTask());
 		task.setTaskTitle(null);
 		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -364,20 +270,14 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleDescriptionSize() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task task = taskRepository.save(taskBuild.getTask());
 		task.setTaskTitle("");
 		task.setTaskDescription("");
 
 		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -396,19 +296,13 @@ public class TaskValidationTest extends GenericTest {
 
 	@Test
 	public void testPutTitleDescriptionNotNull() throws Exception {
-		Program program = programRepository.save(new Program("title", "description"));
-		
-		Project project = projectRepository.save(new Project("title", "description", program));
+		TaskBuilder taskBuild = applicationContext.getBean(TaskBuilder.class, "title", "description");
 
-		Category category = categoryRepository.save(new Category("name"));
-
-		Status status = statusRepository.save(new Status("name"));
-
-		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		Task task = taskRepository.save(taskBuild.getTask());
 		task.setTaskTitle(null);
 		task.setTaskDescription(null);
 		Map<String, Object> map = getMap(task);
-		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("project", getUrl() + "/project/" + taskBuild.getProject().getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
