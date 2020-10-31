@@ -48,18 +48,18 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Task> findById(Integer idTask) {
+        return repository.findById(idTask);
     }
 
     @Override
-    public List<Task> findById(String id) {
-        return repository.findById(id);
+    public List<Task> findById(String idTask) {
+        return repository.findById(idTask);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idTask) {
+        return repository.existsById(idTask);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class TaskService implements TaskRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idTask) {
+        repository.deleteById(idTask);
     }
 
     @Override

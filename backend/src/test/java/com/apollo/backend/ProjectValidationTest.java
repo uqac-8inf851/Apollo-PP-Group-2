@@ -10,7 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class ProjectValidationTest extends GenericTest {
 
 	@BeforeEach
 	public void setup() {
-		if(populatedDb) return;
+		if(populatedDb) { return; }
 
 		clearDatabase();
 
@@ -66,8 +68,8 @@ public class ProjectValidationTest extends GenericTest {
 		Program program = programRepository.save(new Program("title", "description"));
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("projectTitle", "title");
+		map.put("projectDescription", "description");
 		map.put("program", getUrl() + "/program/" + program.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
@@ -195,8 +197,8 @@ public class ProjectValidationTest extends GenericTest {
 		Project saved = projectRepository.save(new Project("title", "description", program));
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("projectTitle", "title");
+		map.put("projectDescription", "description");
 		map.put("anotherProperty", "intruder");
 		map.put("program", getUrl() + "/program/" + program.getId());
 
@@ -228,7 +230,7 @@ public class ProjectValidationTest extends GenericTest {
 		Program program = programRepository.save(new Program("title", "description"));
 
 		Project project = projectRepository.save(new Project("title", "description", program));
-		project.setTitle("");
+		project.setProjectTitle("");
 
 		Map<String, Object> map = getMap(project);
 		map.put("program", getUrl() + "/program/" + program.getId());
@@ -248,7 +250,7 @@ public class ProjectValidationTest extends GenericTest {
 		Program program = programRepository.save(new Program("title", "description"));
 
 		Project project = projectRepository.save(new Project("title", "description", program));
-		project.setTitle(null);
+		project.setProjectTitle(null);
 		Map<String, Object> map = getMap(project);
 		map.put("program", getUrl() + "/program/" + program.getId());
 
@@ -267,8 +269,8 @@ public class ProjectValidationTest extends GenericTest {
 		Program program = programRepository.save(new Program("title", "description"));
 
 		Project project = projectRepository.save(new Project("title", "description", program));
-		project.setTitle("");
-		project.setDescription("");
+		project.setProjectTitle("");
+		project.setProjectDescription("");
 
 		Map<String, Object> map = getMap(project);
 		map.put("program", getUrl() + "/program/" + program.getId());
@@ -293,8 +295,8 @@ public class ProjectValidationTest extends GenericTest {
 		Program program = programRepository.save(new Program("title", "description"));
 
 		Project project = projectRepository.save(new Project("title", "description", program));
-		project.setTitle(null);
-		project.setDescription(null);
+		project.setProjectTitle(null);
+		project.setProjectDescription(null);
 		Map<String, Object> map = getMap(project);
 		map.put("program", getUrl() + "/program/" + program.getId());
 

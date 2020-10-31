@@ -12,11 +12,11 @@ public class Program extends GenericEntity {
 
     @NotNull(message = "Title is mandatory")
     @Size(min = 1, max = 300, message = "Title must be between 1 and 300 characters")
-    private String title;
+    private String programTitle;
 
     @NotNull(message = "Description is mandatory")
     @Size(min = 1, max = 300, message = "Description must be between 1 and 300 characters")
-    private String description;
+    private String programDescription;
 
     @OneToMany(mappedBy = "program")
     private List<Project> projects;
@@ -24,25 +24,25 @@ public class Program extends GenericEntity {
     protected Program() {
     }
 
-    public Program(String title, String description) {
-        this.setTitle(title);
-        this.setDescription(description);
+    public Program(String programTitle, String programDescription) {
+        this.setProgramTitle(programTitle);
+        this.setProgramDescription(programDescription);
     }
 
-    public String getTitle() {
-        return title;
+    public String getProgramTitle() {
+        return programTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setProgramTitle(String programTitle) {
+        this.programTitle = programTitle;
     }
 
-    public String getDescription() {
-        return description;
+    public String getProgramDescription() {
+        return programDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setProgramDescription(String programDescription) {
+        this.programDescription = programDescription;
     }
 
     public List<Project> getProjects() {

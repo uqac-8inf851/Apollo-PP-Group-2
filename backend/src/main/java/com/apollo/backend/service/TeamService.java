@@ -48,18 +48,18 @@ public class TeamService implements TeamRepository {
     }
 
     @Override
-    public Optional<Team> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Team> findById(Integer idTeam) {
+        return repository.findById(idTeam);
     }
 
     @Override
-    public List<Team> findById(String id) {
-        return repository.findById(id);
+    public List<Team> findById(String idTeam) {
+        return repository.findById(idTeam);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idTeam) {
+        return repository.existsById(idTeam);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class TeamService implements TeamRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idTeam) {
+        repository.deleteById(idTeam);
     }
 
     @Override

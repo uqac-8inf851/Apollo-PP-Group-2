@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -33,7 +34,7 @@ public class ProgramController extends GenericController {
     @Autowired
     private ProgramRepository repository;
 
-    private String baseLink = Program.class.getSimpleName().toLowerCase();
+    private String baseLink = Program.class.getSimpleName().toLowerCase(Locale.getDefault());
 
     @RequestMapping(method = RequestMethod.POST, value = "/program") 
     public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Program> program) {
@@ -43,8 +44,8 @@ public class ProgramController extends GenericController {
     @RequestMapping(method = RequestMethod.PUT, value = "/program/{id}") 
     public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Program> program, @PathVariable Integer id) {
         Optional<Program> registered = repository.findById(id);
-        registered.get().setTitle(program.getContent().getTitle());
-        registered.get().setDescription(program.getContent().getDescription());
+        registered.get().setProgramTitle(program.getContent().getProgramTitle());
+        registered.get().setProgramDescription(program.getContent().getProgramDescription());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

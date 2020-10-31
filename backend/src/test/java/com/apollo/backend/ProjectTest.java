@@ -11,16 +11,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
 import java.util.Map;
 
+import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
+import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.StatusRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ProjectTest extends GenericTest {
@@ -31,11 +37,17 @@ public class ProjectTest extends GenericTest {
 	@Autowired 
 	private ProgramRepository programRepository;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private StatusRepository statusRepository;
+
 	private static boolean populatedDb = false;
 
 	@BeforeEach
 	public void setup() {
-		if(populatedDb) return;
+		if(populatedDb) { return; }
 
 		clearDatabase();
 
@@ -100,12 +112,12 @@ public class ProjectTest extends GenericTest {
 		assertEquals(HttpStatus.OK, responseProjectInserted.getStatusCode());
 		assertEquals(null, responseProjectInserted.getBody().getModDate());
 
-		responseProjectInserted.getBody().setTitle("Project modified 1");
+		responseProjectInserted.getBody().setProjectTitle("Project modified 1");
 
 		HttpEntity<Project> requestUpdate = new HttpEntity<Project>(responseProjectInserted.getBody());
 		ResponseEntity<Project> responseModified = this.restTemplate.exchange(projectEndPoint, HttpMethod.PUT, requestUpdate, Project.class);
 		assertEquals(HttpStatus.OK, responseModified.getStatusCode());
-		assertEquals("Project modified 1", responseModified.getBody().getTitle());
+		assertEquals("Project modified 1", responseModified.getBody().getProjectTitle());
 
 		int compare = response.getBody().getModDate().compareTo(responseModified.getBody().getModDate());
 
@@ -144,9 +156,15 @@ public class ProjectTest extends GenericTest {
 		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-		Task task = new Task("title", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", response.getHeaders().getLocation());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 
@@ -171,9 +189,15 @@ public class ProjectTest extends GenericTest {
 		ResponseEntity<Project> response = restTemplate.postForEntity(getUrl() + "/project", projectMap, Project.class);
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-		Task task = new Task("title", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> taskMap = getMap(task);
 		taskMap.put("project", response.getHeaders().getLocation());
+		taskMap.put("category", getUrl() + "/category/" + category.getId());
+		taskMap.put("status", getUrl() + "/status/" + status.getId());
 		ResponseEntity<Task> responseTask = restTemplate.postForEntity(getUrl() + "/task", taskMap, Task.class);
 		assertEquals(HttpStatus.CREATED, responseTask.getStatusCode());
 

@@ -15,11 +15,11 @@ public class Task extends GenericEntity {
 
     @NotNull(message = "Title is mandatory")
     @Size(min = 1, max = 300, message = "Title must be between 1 and 300 characters")
-    private String title;
+    private String taskTitle;
 
     @NotNull(message = "Description is mandatory")
     @Size(min = 1, max = 300, message = "Description must be between 1 and 300 characters")
-    private String description;
+    private String taskDescription;
 
     private Integer priority;
 
@@ -30,30 +30,40 @@ public class Task extends GenericEntity {
     @OneToMany(mappedBy = "task")
     private List<Track> tracks;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "status_id")
+    private Status status;
+
     protected Task() {
     }
 
-    public Task(String title, String description, Integer priority, Project project) {
-        this.setTitle(title);
-        this.setDescription(description);
+    public Task(String taskTitle, String taskDescription, Integer priority, Project project, Category category, Status status) {
+        this.setTaskTitle(taskTitle);
+        this.setTaskDescription(taskDescription);
         this.setPriority(priority);
         this.setProject(project);
+        this.setCategory(category);
+        this.setStatus(status);
     }
 
-    public String getTitle() {
-        return title;
+    public String getTaskTitle() {
+        return taskTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTaskTitle(String taskTitle) {
+        this.taskTitle = taskTitle;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTaskDescription() {
+        return taskDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
     }
 
     public Integer getPriority() {
@@ -78,5 +88,21 @@ public class Task extends GenericEntity {
 
     public void setTrack(List<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

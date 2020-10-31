@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -33,7 +34,7 @@ public class ProjectController extends GenericController {
     @Autowired
     private ProjectRepository repository;
 
-    private String baseLink = Project.class.getSimpleName().toLowerCase();
+    private String baseLink = Project.class.getSimpleName().toLowerCase(Locale.getDefault());
 
     @RequestMapping(method = RequestMethod.POST, value = "/project") 
     public @ResponseBody ResponseEntity<?> savePost(@RequestBody @Valid EntityModel<Project> project) {
@@ -43,8 +44,8 @@ public class ProjectController extends GenericController {
     @RequestMapping(method = RequestMethod.PUT, value = "/project/{id}") 
     public @ResponseBody ResponseEntity<?> savePut(@RequestBody @Valid EntityModel<Project> project, @PathVariable Integer id) {
         Optional<Project> registered = repository.findById(id);
-        registered.get().setTitle(project.getContent().getTitle());
-        registered.get().setDescription(project.getContent().getDescription());
+        registered.get().setProjectTitle(project.getContent().getProjectTitle());
+        registered.get().setProjectDescription(project.getContent().getProjectDescription());
 
         return processRequest(registered.get(), HttpStatus.OK);
     }

@@ -18,7 +18,7 @@ public class GenericController {
 
         ArrayList<String> messages = new ArrayList<String>();
 
-        if(violations.size() > 0) {
+        if(!violations.isEmpty()) {
             for (ConstraintViolation<?> violation : violations) {
                 messages.add(violation.getMessage());
             }

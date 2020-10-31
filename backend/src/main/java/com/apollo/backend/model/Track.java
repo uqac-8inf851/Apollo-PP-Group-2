@@ -20,13 +20,18 @@ public class Track extends GenericEntity {
     @JoinColumn(name = "task_id")
     private Task task;
 
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     protected Track() {
     }
 
-    public Track(Instant startTime, Instant endTime, Task task) {
+    public Track(Instant startTime, Instant endTime, Task task, User user) {
         this.setStartTime(startTime);
         this.setEndTime(endTime);
         this.setTask(task);
+        this.setUser(user);
     }
 
     public Instant getStartTime() {
@@ -51,5 +56,13 @@ public class Track extends GenericEntity {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

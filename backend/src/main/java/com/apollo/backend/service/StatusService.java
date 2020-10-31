@@ -48,18 +48,18 @@ public class StatusService implements StatusRepository {
     }
 
     @Override
-    public Optional<Status> findById(Integer id) {
-        return repository.findById(id);
+    public Optional<Status> findById(Integer idStatus) {
+        return repository.findById(idStatus);
     }
 
     @Override
-    public List<Status> findById(String id) {
-        return repository.findById(id);
+    public List<Status> findById(String idStatus) {
+        return repository.findById(idStatus);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return repository.existsById(id);
+    public boolean existsById(Integer idStatus) {
+        return repository.existsById(idStatus);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class StatusService implements StatusRepository {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        repository.deleteById(id);
+    public void deleteById(Integer idStatus) {
+        repository.deleteById(idStatus);
     }
 
     @Override

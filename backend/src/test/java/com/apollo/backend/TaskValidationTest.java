@@ -10,17 +10,23 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.apollo.backend.model.Category;
 import com.apollo.backend.model.Program;
 import com.apollo.backend.model.Project;
+import com.apollo.backend.model.Status;
 import com.apollo.backend.model.Task;
+import com.apollo.backend.repository.CategoryRepository;
 import com.apollo.backend.repository.ProgramRepository;
 import com.apollo.backend.repository.ProjectRepository;
+import com.apollo.backend.repository.StatusRepository;
 import com.apollo.backend.repository.TaskRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -35,11 +41,17 @@ public class TaskValidationTest extends GenericTest {
 	@Autowired
 	private ProjectRepository projectRepository;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private StatusRepository statusRepository;
+
 	private static boolean populatedDb = false;
 
 	@BeforeEach
 	public void setup() {
-		if(populatedDb) return;
+		if(populatedDb) { return; }
 
 		clearDatabase();
 
@@ -52,7 +64,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 		
-		Task newObject = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task newObject = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
 		assertNotNull(newObject);
 	}
@@ -74,10 +90,18 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("taskTitle", "title");
+		map.put("taskDescription", "description");
 		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("category", getUrl() + "/category/" + category.getId());
+		map.put("status", getUrl() + "/status/" + status.getId());
+		map.put("category", getUrl() + "/category/" + category.getId());
+		map.put("status", getUrl() + "/status/" + status.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -92,9 +116,15 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = new Task("title", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("title", "description", 0, project, category, status);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("category", getUrl() + "/category/" + category.getId());
+		map.put("status", getUrl() + "/status/" + status.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -109,7 +139,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = new Task("", "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("", "description", 0, project, category, status);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
@@ -129,7 +163,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = new Task(null, "description", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task(null, "description", 0, project, category, status);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
@@ -149,7 +187,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = new Task("", "", 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task("", "", 0, project, category, status);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
@@ -173,7 +215,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = new Task(null, null, 0, project);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = new Task(null, null, 0, project, category, status);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
@@ -198,7 +244,11 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task saved = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -215,14 +265,20 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task saved = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("title", "title");
-		map.put("description", "description");
+		map.put("taskTitle", "title");
+		map.put("taskDescription", "description");
 		map.put("priority", 0);
 		map.put("anotherProperty", "intruder");
 		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("category", getUrl() + "/category/" + category.getId());
+		map.put("status", getUrl() + "/status/" + status.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -237,10 +293,16 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task saved = taskRepository.save(new Task("title", "description", 0, project));
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task saved = taskRepository.save(new Task("title", "description", 0, project, category, status));
 		
 		Map<String, Object> map = getMap(saved);
 		map.put("project", getUrl() + "/project/" + project.getId());
+		map.put("category", getUrl() + "/category/" + category.getId());
+		map.put("status", getUrl() + "/status/" + status.getId());
 
 		HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<Map<String, Object>>(map);
 
@@ -255,8 +317,12 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
-		task.setTitle("");
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		task.setTaskTitle("");
 
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
@@ -277,8 +343,12 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
-		task.setTitle(null);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		task.setTaskTitle(null);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
@@ -298,9 +368,13 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
-		task.setTitle("");
-		task.setDescription("");
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		task.setTaskTitle("");
+		task.setTaskDescription("");
 
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
@@ -326,9 +400,13 @@ public class TaskValidationTest extends GenericTest {
 		
 		Project project = projectRepository.save(new Project("title", "description", program));
 
-		Task task = taskRepository.save(new Task("title", "description", 0, project));
-		task.setTitle(null);
-		task.setDescription(null);
+		Category category = categoryRepository.save(new Category("name"));
+
+		Status status = statusRepository.save(new Status("name"));
+
+		Task task = taskRepository.save(new Task("title", "description", 0, project, category, status));
+		task.setTaskTitle(null);
+		task.setTaskDescription(null);
 		Map<String, Object> map = getMap(task);
 		map.put("project", getUrl() + "/project/" + project.getId());
 
