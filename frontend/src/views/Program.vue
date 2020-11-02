@@ -30,6 +30,7 @@
         <Info
           :infoItem="selectedProgram"
           :infoItemLabel="formProps"
+          :showDeleteBtn="showDeleteBtn"
           @add-item="newProject"
           @edit-item="editProgram"
           @del-item="delProgram"
@@ -37,6 +38,7 @@
         <Projects
           :program="selectedProgram"
           @edit-project="editProject"
+          @show-delete-btn="showDeleteBtn = $event"
         />
       </div>
     </v-main>
@@ -74,6 +76,7 @@ export default {
       formItem: {},
       formTitle: "New Program",
       formProps: [],
+      showDeleteBtn: true
     };
   },
   methods: {

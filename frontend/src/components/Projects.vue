@@ -50,11 +50,16 @@ export default {
       await serverApi.delProject(item);
       this.getProjects();
     },
-    getProjects() {
-      serverApi
+    showDeleteBtn() {
+      let show = (this.projects.length == 0);
+      this.$emit("show-delete-btn", show);
+    },
+    async getProjects() {
+      await serverApi
         .getProjectByProgram(this.program)
         .then(data => {
-          this.projects = data._embedded.project
+          this.projects = data._embedded.project;
+          this.showDeleteBtn();
         });
     },
   },

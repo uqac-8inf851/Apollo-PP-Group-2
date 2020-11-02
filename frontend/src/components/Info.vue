@@ -30,6 +30,7 @@
           <v-btn
             color="grey"
             text
+            v-show="showDeleteBtn"
             v-bind="attrs"
             v-on="on"
             @click="del(infoItem)"
@@ -56,6 +57,10 @@ export default {
       type: Object,
       required: true,
     },
+    showDeleteBtn: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     add() {
