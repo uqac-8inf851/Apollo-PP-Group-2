@@ -16,6 +16,7 @@
           <v-btn
             color="grey"
             text
+            v-show="showEditBtn"
             v-bind="attrs"
             v-on="on"
             @click="edit(infoItem)"
@@ -58,6 +59,10 @@ export default {
       required: true,
     },
     showDeleteBtn: {
+      type: Boolean,
+      default: true
+    },
+    showEditBtn: {
       type: Boolean,
       default: true
     }

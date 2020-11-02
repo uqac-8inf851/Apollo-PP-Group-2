@@ -9,22 +9,36 @@
 
     <v-navigation-drawer v-model="drawer" app width="300">
       <Menu />
-      <MenuList :menuItems="menuItems" @add-menu-item="newProject" @choose-menu-item="chooseProject" />
+      <MenuList
+        :menuItems="menuItems"
+        :showNewBtn="false"
+        menuItemLabel="projectTitle"
+        menuTitle="Project"
+        @add-menu-item="newProject"
+        @choose-menu-item="chooseProject"
+      />
     </v-navigation-drawer>
     <v-main>
       <AddForm
         v-if="showAddForm"
         :formTitle="formTitle"
         :item="formItem"
+        :itemLabel="formProps"
         @save-item="save"
         @cancel-add-item="showAddForm = $event"
       />
-      <div v-else>
-        <Info :infoItem="selectedProject" @add-item="newTask" @edit-item="editProject" @del-item="delProject" />
+      <div v-if="!showAddForm && selectedProject">
+        <Info
+          :infoItem="selectedProject"
+          :infoItemLabel="formProps"
+          :showDeleteBtn="showDeleteBtn"
+          :showEditBtn="false"
+          @add-item="newTask"
+        />
         <Tasks
           :project="selectedProject"
           @edit-task="editTask"
-          @del-task="delTask"
+          @show-delete-btn="showDeleteBtn = $event"
         />
       </div>
     </v-main>
@@ -46,67 +60,41 @@ export default {
     MenuList,
     Menu,
     AddForm,
-    Info
+    Info,
   },
-  mounted() {
-    serverApi
-      .getProject()
-      .then((data) => (this.menuItems.list = data._embedded.project));
-    
-    this.selectedProject = this.menuItems.list[0];
+  created() {
+    this.getProject();
   },
   data() {
     return {
       drawer: null,
       menuItems: {
-        title: "Project",
-        list: [
-          {
-            id: 1,
-            title: "Project 1",
-            description: "Project 1 description",
-          },
-          {
-            id: 2,
-            title: "Project 2",
-            description: "Project 2 description",
-          },
-          {
-            id: 3,
-            title: "Project 3",
-            description: "Project 3 description",
-          },
-        ],
+        list: [],
       },
       showAddForm: false,
-      selectedProject: {},
+      selectedProject: null,
       formItem: {},
       formTitle: "New Project",
+      formProps: [],
+      showDeleteBtn: true
     };
   },
   methods: {
-    newProject() {
-      this.showAddForm = false;
-      this.formTitle = "New Project";
-      this.formItem = {};
-      this.showAddForm = true;
+    getProject() {
+      serverApi.getProject().then((data) => {
+        this.menuItems.list = data._embedded.project
+      });
     },
     chooseProject(item) {
       this.showAddForm = false;
+      this.formProps = ["projectTitle", "projectDescription"],
       this.selectedProject = item;
     },
-    editProject(item) {
-      this.formTitle = "Edit Project";
-      this.formItem = item;
-      this.showAddForm = true;
-    },
-    saveProject(item) {
-      serverApi.saveProject(item).then(console.log("saved"));
+    async delProject(item) {
+      await serverApi.delProject(item);
+      this.getProject();
       this.showAddForm = false;
-    },
-    delProject(item) {
-      serverApi.delProject(item).then(console.log("deleted"));
-      this.showAddForm = false;
+      this.selectedProject = null;
     },
     newTask() {
       this.showAddForm = false;
@@ -128,12 +116,8 @@ export default {
       this.showAddForm = false;
     },
     save(item) {
-      if (this.formTitle.includes('Project')) {
-        this.saveProject(item);
-      } else {
-        this.saveTask(item);
-      }
-    }
+      this.saveTask(item);
+    },
   },
 };
 </script>
