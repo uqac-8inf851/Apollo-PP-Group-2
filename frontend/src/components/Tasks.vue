@@ -1,23 +1,19 @@
 <template>
-  <v-expansion-panels>
+  <v-expansion-panels focusable inset>
     <v-expansion-panel v-for="item in tasks" :key="item.id">
       <v-expansion-panel-header disable-icon-rotate>
-        {{ item.title }} of {{ project.title }}
+        {{ item.taskTitle }} of {{ project.projectTitle }}
         <v-spacer></v-spacer>
         <div class="text-end">
-          <v-icon @click.native.stop="edit(item)"
-            >mdi-file-document-edit-outline</v-icon
-          >
-          <v-icon class="trash" @click.native.stop="del(item)"
-            >mdi-trash-can-outline</v-icon
-          >
+          <v-icon @click.native.stop="edit(item)">mdi-file-document-edit-outline</v-icon>
+          <v-icon class="trash" @click.native.stop="del(item)">mdi-trash-can-outline</v-icon>
         </div>
         <template v-slot:actions>
           <v-icon expand-icon></v-icon>
         </template>
       </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        {{ item.description }}
+      <v-expansion-panel-content class="panel-content">
+        {{ item.taskDescription }}
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -36,23 +32,7 @@ export default {
   },
   data() {
     return {
-      tasks: [
-        {
-          id: 1,
-          title: "Task 1",
-          description: "Description Task 1",
-        },
-        {
-          id: 2,
-          title: "Task 2",
-          description: "Description Task 2",
-        },
-        {
-          id: 3,
-          title: "Task 3",
-          description: "Description Task 3",
-        },
-      ],
+      tasks: [],
     };
   },
   mounted() {
@@ -62,13 +42,21 @@ export default {
     edit(item) {
       this.$emit("edit-task", item);
     },
-    del(item) {
-      this.$emit("del-task", item);
+    async del(item) {
+      await serverApi.delTask(item);
+      this.getTasks();
     },
-    getTasks() {
-      serverApi
-        .getTask(this.project.id)
-        .then((data) => (this.projects = data._embedded.task));
+    showDeleteBtn() {
+      let show = (this.tasks.length == 0);
+      this.$emit("show-delete-btn", show);
+    },
+    async getTasks() {
+      await serverApi
+        .getTaskByProject(this.project)
+        .then(data => {
+          this.tasks = data._embedded.task;
+          this.showDeleteBtn();
+        });
     },
   },
   watch: {
@@ -80,4 +68,11 @@ export default {
 </script>
 
 <style scoped>
+.trash:hover {
+  color: red;
+}
+
+.panel-content {
+  padding-top: 15px;
+}
 </style>

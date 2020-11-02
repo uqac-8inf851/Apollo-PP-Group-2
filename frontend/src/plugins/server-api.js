@@ -78,33 +78,37 @@ module.exports = (function () {
         var url = `${BACKEND_URL}/task`;
 
         axios.get(url).then(response => (
-            console.log(response.data),
+            resolve(response.data)
+        ));
+    });
+
+    var getTaskByProject = (project) => new Promise(function (resolve) {
+        var url = project._links.tasks.href;
+
+        axios.get(url).then(response => (
             resolve(response.data)
         ));
     });
 
     var saveTask = (task) => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/task`;
-
-        if (task.id) {
-            url += `/${task.id}`;
-            axios.put(url, task).then(response => (
-                console.log(response.data),
+        const DTO = Object.assign({"taskTitle": task.taskTitle, "taskDescription": task.taskDescription, "project": task.project._links.project.href, "category": "http://localhost:8081/category/1", "status" : "http://localhost:8081/status/1"});
+        if (task.item.addDate) {
+            url = task.item._links.task.href;
+            axios.put(url, DTO).then(response => (
                 resolve(response.data)
             ));
         } else {
-            axios.post(url, task).then(response => (
-                console.log(response.data),
+            axios.post(url, DTO).then(response => (
                 resolve(response.data)
             ));
         }
     });
 
     var delTask = (task) => new Promise(function (resolve) {
-        var url = `${BACKEND_URL}/task`;
+        var url = task._links.task.href;
 
-        axios.delete(url, task).then(response => (
-            console.log(response.data),
+        axios.delete(url).then(response => (
             resolve(response.data)
         ));
     });
@@ -118,6 +122,7 @@ module.exports = (function () {
         saveProject,
         delProject,
         getTask,
+        getTaskByProject,
         saveTask,
         delTask
     };

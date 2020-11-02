@@ -14,7 +14,6 @@
         :showNewBtn="false"
         menuItemLabel="projectTitle"
         menuTitle="Project"
-        @add-menu-item="newProject"
         @choose-menu-item="chooseProject"
       />
     </v-navigation-drawer>
@@ -24,7 +23,7 @@
         :formTitle="formTitle"
         :item="formItem"
         :itemLabel="formProps"
-        @save-item="save"
+        @save-item="saveTask"
         @cancel-add-item="showAddForm = $event"
       />
       <div v-if="!showAddForm && selectedProject">
@@ -100,23 +99,20 @@ export default {
       this.showAddForm = false;
       this.formTitle = "New Task";
       this.formItem = {};
+      this.formProps = ["taskTitle", "taskDescription"],
       this.showAddForm = true;
     },
     editTask(item) {
       this.formTitle = "Edit Task";
       this.formItem = item;
+      this.formProps = ["taskTitle", "taskDescription"],
       this.showAddForm = true;
     },
-    saveTask(item) {
-      serverApi.saveTask(item).then(console.log("saved"));
+    async saveTask(item) {
+      item['project'] = this.selectedProject;
+      await serverApi.saveTask(item).then(console.log("saved"));
+      this.formProps = ["projectTitle", "projectDescription"],
       this.showAddForm = false;
-    },
-    delTask(item) {
-      serverApi.delTask(item).then(console.log("deleted"));
-      this.showAddForm = false;
-    },
-    save(item) {
-      this.saveTask(item);
     },
   },
 };
