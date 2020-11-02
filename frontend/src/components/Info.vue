@@ -1,17 +1,11 @@
 <template>
   <v-card elevation="4">
-    <v-card-title>{{ infoItem.title }}</v-card-title>
-    <v-card-text>{{ infoItem.description }}</v-card-text>
+    <v-card-title>{{ infoItem[infoItemLabel[0]] }}</v-card-title>
+    <v-card-text>{{ infoItem[infoItemLabel[1]] }}</v-card-text>
     <v-card-actions>
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="grey"
-            text
-            v-bind="attrs"
-            v-on="on"
-            @click="add"
-          >
+          <v-btn color="grey" text v-bind="attrs" v-on="on" @click="add">
             <v-icon>mdi-clipboard-plus-outline</v-icon>
           </v-btn>
         </template>
@@ -54,6 +48,10 @@
 export default {
   name: "Info",
   props: {
+    infoItemLabel: {
+      type: Array,
+      required: true,
+    },
     infoItem: {
       type: Object,
       required: true,

@@ -2,53 +2,60 @@ var axios = require('axios');
 
 module.exports = (function () {
 
+    const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8081';
+
     var getProgram = () => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/program';
+        var url = `${BACKEND_URL}/program`;
 
         axios.get(url).then(response => (
-            console.log(response.data),
             resolve(response.data)
         ));
     });
 
     var saveProgram = (program) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/program';
-
-        if (program.id) {
-            axios.put(url, program).then(response => (
-                console.log(response.data),
+        var url = `${BACKEND_URL}/program`;
+        const DTO = Object.assign({"programTitle": program.programTitle, "programDescription": program.programDescription});
+        if (program.item.addDate) {
+            url = program.item._links.program.href;
+            axios.put(url, DTO).then(response => (
                 resolve(response.data)
             ));
         } else {
-            axios.post(url, program).then(response => (
-                console.log(response.data),
+            axios.post(url, DTO).then(response => (
                 resolve(response.data)
             ));
         }
     });
 
     var delProgram = (program) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/program';
+        var url = program._links.program.href;
 
-        axios.delete(url, program).then(response => (
-            console.log(response.data),
+        axios.delete(url).then(response => (
             resolve(response.data)
         ));
     });
 
     var getProject = () => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/project';
+        var url = `${BACKEND_URL}/project`;
 
         axios.get(url).then(response => (
-            console.log(response.data),
+            resolve(response.data)
+        ));
+    });
+
+    var getProjectByProgram = (program) => new Promise(function (resolve) {
+        var url = program._links.projects.href;
+
+        axios.get(url).then(response => (
             resolve(response.data)
         ));
     });
 
     var saveProject = (project) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/project';
+        var url = `${BACKEND_URL}/project`;
 
         if (project.id) {
+            url += `/${project.id}`;
             axios.put(url, project).then(response => (
                 console.log(response.data),
                 resolve(response.data)
@@ -62,7 +69,7 @@ module.exports = (function () {
     });
 
     var delProject = (project) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/project';
+        var url = `${BACKEND_URL}/project`;
 
         axios.delete(url, project).then(response => (
             console.log(response.data),
@@ -71,7 +78,7 @@ module.exports = (function () {
     });
 
     var getTask = () => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/task';
+        var url = `${BACKEND_URL}/task`;
 
         axios.get(url).then(response => (
             console.log(response.data),
@@ -80,9 +87,10 @@ module.exports = (function () {
     });
 
     var saveTask = (task) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/task';
+        var url = `${BACKEND_URL}/task`;
 
         if (task.id) {
+            url += `/${task.id}`;
             axios.put(url, task).then(response => (
                 console.log(response.data),
                 resolve(response.data)
@@ -96,7 +104,7 @@ module.exports = (function () {
     });
 
     var delTask = (task) => new Promise(function (resolve) {
-        var url = 'http://localhost:8080/task';
+        var url = `${BACKEND_URL}/task`;
 
         axios.delete(url, task).then(response => (
             console.log(response.data),
@@ -109,6 +117,7 @@ module.exports = (function () {
         saveProgram,
         delProgram,
         getProject,
+        getProjectByProgram,
         saveProject,
         delProject,
         getTask,

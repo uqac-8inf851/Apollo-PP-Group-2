@@ -11,6 +11,8 @@
       <Menu />
       <MenuList
         :menuItems="menuItems"
+        menuItemLabel="programTitle"
+        menuTitle="Program"
         @add-menu-item="newProgram"
         @choose-menu-item="chooseProgram"
       />
@@ -20,11 +22,18 @@
         v-if="showAddForm"
         :formTitle="formTitle"
         :item="formItem"
+        :itemLabel="propsProgram"
         @save-item="save"
         @cancel-add-item="showAddForm = $event"
       />
-      <div v-else>
-        <Info :infoItem="selectedProgram" @add-item="newProject" @edit-item="editProgram" @del-item="delProgram" />
+      <div v-if="!showAddForm && selectedProgram">
+        <Info
+          :infoItem="selectedProgram"
+          :infoItemLabel="propsProgram"
+          @add-item="newProject"
+          @edit-item="editProgram"
+          @del-item="delProgram"
+        />
         <Projects
           :program="selectedProgram"
           @edit-project="editProject"
@@ -50,45 +59,30 @@ export default {
     MenuList,
     Menu,
     AddForm,
-    Info
+    Info,
   },
-  mounted() {
-    serverApi
-      .getProgram()
-      .then((data) => (this.menuItems.list = data._embedded.project));
-
-    this.selectedProgram = this.menuItems.list[0];
+  created() {
+    this.getProgram();
   },
   data() {
     return {
       drawer: null,
       menuItems: {
-        title: "Program",
-        list: [
-          {
-            id: 1,
-            title: "Program 1",
-            description: "Program 1 description",
-          },
-          {
-            id: 2,
-            title: "Program 2",
-            description: "Program 2 description",
-          },
-          {
-            id: 3,
-            title: "Program 3",
-            description: "Program 3 description",
-          },
-        ],
+        list: [],
       },
+      propsProgram: ["programTitle", "programDescription"],
       showAddForm: false,
-      selectedProgram: {},
+      selectedProgram: null,
       formItem: {},
       formTitle: "New Program",
     };
   },
   methods: {
+    getProgram() {
+      serverApi.getProgram().then((data) => {
+        this.menuItems.list = data._embedded.program;
+      });
+    },
     newProgram() {
       this.showAddForm = false;
       this.formTitle = "New Program";
@@ -104,13 +98,16 @@ export default {
       this.formItem = item;
       this.showAddForm = true;
     },
-    saveProgram(item) {
-      serverApi.saveProgram(item).then(console.log("saved"));
+    async saveProgram(item) {
+      await serverApi.saveProgram(item).then(data => this.selectedProgram = data);
+      this.getProgram();
       this.showAddForm = false;
     },
-    delProgram(item) {
-      serverApi.delProgram(item).then(console.log("deleted"));
+    async delProgram(item) {
+      await serverApi.delProgram(item);
+      this.getProgram();
       this.showAddForm = false;
+      this.selectedProgram = null
     },
     newProject() {
       this.showAddForm = false;
@@ -132,12 +129,12 @@ export default {
       this.showAddForm = false;
     },
     save(item) {
-      if (this.formTitle.includes('Program')) {
+      if (this.formTitle.includes("Program")) {
         this.saveProgram(item);
       } else {
         this.saveProject(item);
       }
-    }
+    },
   },
 };
 </script>
