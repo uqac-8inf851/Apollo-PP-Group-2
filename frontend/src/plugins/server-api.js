@@ -53,26 +53,23 @@ module.exports = (function () {
 
     var saveProject = (project) => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/project`;
-
-        if (project.id) {
-            url += `/${project.id}`;
-            axios.put(url, project).then(response => (
-                console.log(response.data),
+        const DTO = Object.assign({"projectTitle": project.projectTitle, "projectDescription": project.projectDescription, "program": project.program._links.program.href});
+        if (project.item.addDate) {
+            url = project.item._links.project.href;
+            axios.put(url, DTO).then(response => (
                 resolve(response.data)
             ));
         } else {
-            axios.post(url, project).then(response => (
-                console.log(response.data),
+            axios.post(url, DTO).then(response => (
                 resolve(response.data)
             ));
         }
     });
 
     var delProject = (project) => new Promise(function (resolve) {
-        var url = `${BACKEND_URL}/project`;
+        var url = project._links.project.href;
 
-        axios.delete(url, project).then(response => (
-            console.log(response.data),
+        axios.delete(url).then(response => (
             resolve(response.data)
         ));
     });

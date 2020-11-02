@@ -22,14 +22,14 @@
         v-if="showAddForm"
         :formTitle="formTitle"
         :item="formItem"
-        :itemLabel="propsProgram"
+        :itemLabel="formProps"
         @save-item="save"
         @cancel-add-item="showAddForm = $event"
       />
       <div v-if="!showAddForm && selectedProgram">
         <Info
           :infoItem="selectedProgram"
-          :infoItemLabel="propsProgram"
+          :infoItemLabel="formProps"
           @add-item="newProject"
           @edit-item="editProgram"
           @del-item="delProgram"
@@ -37,7 +37,6 @@
         <Projects
           :program="selectedProgram"
           @edit-project="editProject"
-          @del-project="delProject"
         />
       </div>
     </v-main>
@@ -70,11 +69,11 @@ export default {
       menuItems: {
         list: [],
       },
-      propsProgram: ["programTitle", "programDescription"],
       showAddForm: false,
       selectedProgram: null,
       formItem: {},
       formTitle: "New Program",
+      formProps: [],
     };
   },
   methods: {
@@ -87,10 +86,12 @@ export default {
       this.showAddForm = false;
       this.formTitle = "New Program";
       this.formItem = {};
+      this.formProps = ["programTitle", "programDescription"],
       this.showAddForm = true;
     },
     chooseProgram(item) {
       this.showAddForm = false;
+      this.formProps = ["programTitle", "programDescription"],
       this.selectedProgram = item;
     },
     editProgram(item) {
@@ -113,19 +114,19 @@ export default {
       this.showAddForm = false;
       this.formTitle = "New Project";
       this.formItem = {};
+      this.formProps = ["projectTitle", "projectDescription"],
       this.showAddForm = true;
     },
     editProject(item) {
       this.formTitle = "Edit Project";
       this.formItem = item;
+      this.formProps = ["projectTitle", "projectDescription"],
       this.showAddForm = true;
     },
-    saveProject(item) {
-      serverApi.saveProject(item).then(console.log("saved"));
-      this.showAddForm = false;
-    },
-    delProject(item) {
-      serverApi.delProject(item).then(console.log("deleted"));
+    async saveProject(item) {
+      item['program'] = this.selectedProgram;
+      await serverApi.saveProject(item).then(console.log("saved"));
+      this.formProps = ["programTitle", "programDescription"],
       this.showAddForm = false;
     },
     save(item) {
