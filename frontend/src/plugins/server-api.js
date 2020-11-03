@@ -113,6 +113,29 @@ module.exports = (function () {
         ));
     });
 
+    var saveTrack = (track) => new Promise(function (resolve) {
+        var url = `${BACKEND_URL}/track`;
+        const DTO = Object.assign({"startTime": track.startTime, "endTime": track.endTime, "task": track.task._links.task.href, "person" : "http://localhost:8081/person/3"});
+        if (track.endTime) {
+            url = track._links.track.href;
+            axios.put(url, DTO).then(response => (
+                resolve(response.data)
+            ));
+        } else {
+            axios.post(url, DTO).then(response => (
+                resolve(response.data)
+            ));
+        }
+    });
+
+    var getTrackByTask = (task) => new Promise(function (resolve) {
+        var url = task._links.tracks.href;
+
+        axios.get(url).then(response => (
+            resolve(response.data)
+        ));
+    });
+
     return {
         getProgram,
         saveProgram,
@@ -124,7 +147,9 @@ module.exports = (function () {
         getTask,
         getTaskByProject,
         saveTask,
-        delTask
+        delTask,
+        saveTrack,
+        getTrackByTask
     };
 
 }());
