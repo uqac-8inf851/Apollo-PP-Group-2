@@ -1,15 +1,23 @@
 <template>
   <v-list class="pl-14" shaped>
     <v-btn
+      v-if="showNewBtn"
       block
       color="light-green darken-2"
       text
       elevation="2"
       @click="addMenu"
-    >New {{ menuItems.title }}</v-btn>
+    >New {{ menuTitle }}</v-btn>
+    <v-btn
+      :disabled="true"
+      v-else
+      block
+      text
+      elevation="2"
+    >{{ menuTitle }}</v-btn>
     <v-list-item v-for="item in menuItems.list" :key="item.id" link>
       <v-list-item-content>
-        <v-list-item-title @click="chooseMenu(item)">{{ item.title }}</v-list-item-title>
+        <v-list-item-title @click="chooseMenu(item)">{{ item[menuItemLabel] }}</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
   </v-list>
@@ -20,15 +28,22 @@
 export default {
   name: 'MenuList',
   props: {
+    menuTitle: {
+      type: String,
+      required: true
+    },
+    menuItemLabel: {
+      type: String,
+      required: true
+    },
     menuItems: {
       type: Object,
       required: true,
+    },
+    showNewBtn: {
+      type: Boolean,
+      default: true
     }
-  },
-  data() {
-    return {
-      num: 1
-    };
   },
   methods: {
     addMenu() {

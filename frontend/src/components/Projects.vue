@@ -1,8 +1,8 @@
 <template>
-  <v-expansion-panels>
+  <v-expansion-panels focusable inset>
     <v-expansion-panel v-for="item in projects" :key="item.id">
       <v-expansion-panel-header disable-icon-rotate>
-        {{ item.title }} of {{ program.title }}
+        {{ item.projectTitle }} of {{ program.programTitle }}
         <v-spacer></v-spacer>
         <div class="text-end">
           <v-icon @click.native.stop="edit(item)"
@@ -16,8 +16,8 @@
           <v-icon expand-icon></v-icon>
         </template>
       </v-expansion-panel-header>
-      <v-expansion-panel-content>
-        {{ item.description }}
+      <v-expansion-panel-content class="panel-content">
+        {{ item.projectDescription }}
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -36,23 +36,7 @@ export default {
   },
   data() {
     return {
-      projects: [
-        {
-          id: 1,
-          title: "Project 1",
-          description: "Description Project 1",
-        },
-        {
-          id: 2,
-          title: "Project 2",
-          description: "Description Project 2",
-        },
-        {
-          id: 3,
-          title: "Project 3",
-          description: "Description Project 3",
-        },
-      ],
+      projects: [],
     };
   },
   mounted() {
@@ -62,13 +46,21 @@ export default {
     edit(item) {
       this.$emit("edit-project", item);
     },
-    del(item) {
-      this.$emit("del-project", item);
+    async del(item) {
+      await serverApi.delProject(item);
+      this.getProjects();
     },
-    getProjects() {
-      serverApi
-        .getProject(this.program.id)
-        .then((data) => (this.projects = data._embedded.task));
+    showDeleteBtn() {
+      let show = (this.projects.length == 0);
+      this.$emit("show-delete-btn", show);
+    },
+    async getProjects() {
+      await serverApi
+        .getProjectByProgram(this.program)
+        .then(data => {
+          this.projects = data._embedded.project;
+          this.showDeleteBtn();
+        });
     },
   },
   watch: {
@@ -82,5 +74,9 @@ export default {
 <style scoped>
 .trash:hover {
   color: red;
+}
+
+.panel-content {
+  padding-top: 15px;
 }
 </style>
