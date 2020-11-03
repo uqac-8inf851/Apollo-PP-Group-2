@@ -33,8 +33,6 @@ services:
     build: frontend
     networks:
       - apollo-network
-    environment: 
-      - BACKEND_URL=http://localhost:8081
     expose:
       - 80
     ports: 

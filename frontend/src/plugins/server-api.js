@@ -2,7 +2,7 @@ var axios = require('axios');
 
 module.exports = (function () {
 
-    const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8081';
+    const BACKEND_URL = 'http://localhost:8081';
 
     var getProgram = () => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/program`;
