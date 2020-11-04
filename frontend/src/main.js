@@ -16,7 +16,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import Vuetify from '@/plugins/vuetify'
 
-axios.defaults.baseURL = 'http://localhost:8081'
+axios.defaults.baseURL = 'http://40.114.108.8:8081'
 
 library.add(faSortUp, faSortDown, faSort, faEdit, faTrashAlt, faPlusCircle, faSearch, faTimes, faChevronLeft, faChevronDown, faFileExport)
 
