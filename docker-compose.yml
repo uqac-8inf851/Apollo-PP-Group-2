@@ -2,7 +2,7 @@ version: '3'
 
 services:
   database:
-    image: postgres
+    image: postgres:12.0
     environment:
       POSTGRES_USER: apollo-user
       POSTGRES_PASSWORD: "@pollo"
@@ -29,21 +29,62 @@ services:
       - database
     links: 
       - database
-  frontend:
+  frontend01:
     build: frontend
+    networks:
+      - apollo-network
+    expose:
+      - 81
+    ports: 
+      - 81:8080
+    restart: unless-stopped
+    depends_on:
+      - backend
+  frontend02:
+    build: frontend
+    networks:
+      - apollo-network
+    expose:
+      - 82
+    ports: 
+      - 82:8080
+    restart: unless-stopped
+    depends_on:
+      - backend
+  nginx:
+    build: nginx
     networks:
       - apollo-network
     expose:
       - 80
     ports: 
-      - 80:8080
+      - 80:80
     restart: unless-stopped
     depends_on:
-      - backend
-
+      - frontend01
+      - frontend02
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - bootstrap.memory_lock=true
+      - cluster.initial_master_nodes=elasticsearch
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - apollo-network
 networks: 
   apollo-network:
     driver: bridge
 
 volumes:
   dbdata:
+  elasticdata:
