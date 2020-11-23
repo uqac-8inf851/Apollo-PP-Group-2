@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Program from '../views/Program.vue'
 import Project from '../views/Project.vue'
+import Report from '../views/Report.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ Vue.use(VueRouter)
     path: '/project',
     name: 'Project',
     component: Project
+  },
+  {
+    path: '/report',
+    name: 'Report',
+    component: Report
   }
 ]
 

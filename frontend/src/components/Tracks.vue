@@ -39,6 +39,11 @@ export default {
           this.tracks = data._embedded.track;
         });
     },
-  }
+  },
+  watch: {
+    task: function () {
+      this.getTraks();
+    },
+  },
 };
 </script>

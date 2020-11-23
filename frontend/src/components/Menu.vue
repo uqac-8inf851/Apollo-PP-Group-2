@@ -40,6 +40,7 @@
           icon x-large
           v-bind="attrs"
           v-on="on"
+          to="/report"
         >
           <v-icon dark>mdi-file-chart-outline</v-icon>
         </v-btn>
