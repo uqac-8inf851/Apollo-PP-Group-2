@@ -30,7 +30,7 @@ export default {
   methods: {
     moment,
     getDate(date) {
-      return moment(date).format('MM/DD/YYYY hh:mm')
+      return moment(date).format('MM/DD/YYYY hh:mm:ss')
     },
     async getTraks() {
       await serverApi
