@@ -29,4 +29,34 @@ public class LoggingController {
 
         return "Howdy! Check out the Logs to see the output... " + formatter.format(date);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/logs/info")
+    public String indexInfo() {
+        logger.info("An INFO Message");
+ 
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+        Date date = new Date(System.currentTimeMillis());
+
+        return "Howdy! Check out the Logs to see the output Info... " + formatter.format(date);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/logs/warn")
+    public String indexWarn() {
+        logger.warn("A WARN Message");
+ 
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+        Date date = new Date(System.currentTimeMillis());
+
+        return "Howdy! Check out the Logs to see the output Warn... " + formatter.format(date);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/logs/error")
+    public String indexError() {
+        logger.error("An ERROR Message");
+ 
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+        Date date = new Date(System.currentTimeMillis());
+
+        return "Howdy! Check out the Logs to see the output Error... " + formatter.format(date);
+    }
 }
