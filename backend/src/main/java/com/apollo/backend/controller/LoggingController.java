@@ -1,5 +1,8 @@
 package com.apollo.backend.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +24,9 @@ public class LoggingController {
         logger.warn("A WARN Message");
         logger.error("An ERROR Message");
  
-        return "Howdy! Check out the Logs to see the output...";
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+        Date date = new Date(System.currentTimeMillis());
+
+        return "Howdy! Check out the Logs to see the output... " + formatter.format(date);
     }
 }

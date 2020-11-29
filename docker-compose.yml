@@ -29,6 +29,8 @@ services:
       - database
     links: 
       - database
+    volumes:
+      - logfile:/usr/share/apollo/
   frontend01:
     build: frontend
     networks:
@@ -100,7 +102,8 @@ services:
     ports:
       - 9600:9600
     volumes:
-      - logstash:/usr/share/logstash/pipeline/
+      - .\logstash:/usr/share/logstash/pipeline/
+      - logfile:/usr/share/apollo/
     links: 
       - elasticsearch:elasticsearch
     depends_on: 
@@ -115,3 +118,4 @@ volumes:
   dbdata:
   logstash:
   elasticdata:
+  logfile:
