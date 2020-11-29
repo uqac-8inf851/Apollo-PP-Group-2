@@ -29,6 +29,8 @@ services:
       - database
     links: 
       - database
+    volumes:
+      - logfile:/usr/share/apollo/
   frontend01:
     build: frontend
     networks:
@@ -78,8 +80,35 @@ services:
     volumes:
       - elasticdata:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+        - 9200:9200
     networks:
+      - apollo-network
+  kibana:
+    image: kibana:7.7.0
+    container_name: kibana
+    hostname: kibana
+    ports:
+        - 5601:5601
+    links:
+        - elasticsearch:elasticsearch
+    depends_on:
+      - elasticsearch
+    networks:
+      - apollo-network
+  logstash:
+    image: logstash:7.7.0
+    container_name: logstash
+    hostname: logstash
+    ports:
+      - 9600:9600
+    volumes:
+      - .\logstash:/usr/share/logstash/pipeline/
+      - logfile:/usr/share/apollo/
+    links: 
+      - elasticsearch:elasticsearch
+    depends_on: 
+      - elasticsearch
+    networks: 
       - apollo-network
 networks: 
   apollo-network:
@@ -87,4 +116,6 @@ networks:
 
 volumes:
   dbdata:
+  logstash:
   elasticdata:
+  logfile:
