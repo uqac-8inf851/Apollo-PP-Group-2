@@ -2,7 +2,7 @@ var axios = require('axios');
 
 module.exports = (function () {
 
-    const BACKEND_URL = 'http://40.114.108.8:8081';
+    const BACKEND_URL = location.origin + ':8081';
 
     var getProgram = () => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/program`;
@@ -92,7 +92,10 @@ module.exports = (function () {
 
     var saveTask = (task) => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/task`;
-        const DTO = Object.assign({"taskTitle": task.taskTitle, "taskDescription": task.taskDescription, "project": task.project._links.project.href, "category": "http://40.114.108.8:8081/category/1", "status" : "http://40.114.108.8:8081/status/1"});
+        var category = location.origin + ":8081/category/1";
+        var status = location.origin + ":8081/status/1";
+
+        const DTO = Object.assign({"taskTitle": task.taskTitle, "taskDescription": task.taskDescription, "project": task.project._links.project.href, "category": category, "status" : status});
         if (task.item.addDate) {
             url = task.item._links.task.href;
             axios.put(url, DTO).then(response => (
@@ -115,7 +118,9 @@ module.exports = (function () {
 
     var saveTrack = (track) => new Promise(function (resolve) {
         var url = `${BACKEND_URL}/track`;
-        const DTO = Object.assign({"startTime": track.startTime, "endTime": track.endTime, "task": track.task._links.task.href, "person" : "http://40.114.108.8:8081/person/3"});
+        var person = location.origin + ":8081/person/3";
+        
+        const DTO = Object.assign({"startTime": track.startTime, "endTime": track.endTime, "task": track.task._links.task.href, "person" : person});
         if (track.endTime) {
             url = track._links.track.href;
             axios.put(url, DTO).then(response => (
